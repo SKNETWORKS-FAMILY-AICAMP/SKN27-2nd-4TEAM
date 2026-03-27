@@ -1,0 +1,14 @@
+streamlit
+pandas
+numpy
+scikit-learn
+psycopg2-binary
+sqlalchemy
+joblib
+jupyter
+python-dotenv
+
+lightgbm
+xgboost
+
+optuna

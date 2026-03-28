@@ -1,13 +1,13 @@
-import pandas as pd
-import numpy as np
-
-def outlier_control(df,cols): 
+def outlier_control(df,cols):
 
 
   for col in cols:
     if col == 'CashbackAmount':
-      df[f'{col}_clip'] = df['CashbackAmount'].clip(lower=100,upper=240)
+      df[f'{col}_clip'] = df['CashbackAmount'].clip(lower=100,upper=240) 
 
+    elif col == 'DaySinceLastOrder':
+      df[f'{col}_clip'] = df['DaySinceLastOrder'].clip(upper=18)
+      
     else:
       df[f'{col}_log'] = np.log1p(df[col])
 

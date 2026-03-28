@@ -1,23 +1,33 @@
 | 분류 | 변수명 | 상세 정의 및 비즈니스 의미 (Insight) |
 | :--- | :--- | :--- |
-| **ID & Target** | **`CustomerID`** | 고객 고유 식별 번호. (분석 시 학습 제외 대상) |
-| | **`Churn`** | **목적 변수(Target).** 고객의 이탈 여부 (1: 이탈, 0: 유지) |
-| **핵심 파생 변수** | **`Dormancy_Shock`** | 개인별 주문 주기 대비 현재 휴면 기간의 비율. 갑작스러운 활동 중단 탐지. |
-| (Feature Eng.) | **`Recency_Tenure_Ratio`** | 가입 기간 중 마지막 주문 이후 경과 시간의 비중. 이탈의 강력한 선행 지표. |
-| | **`MonthlyOrderFreq`** | 월평균 주문 빈도. 가입 기간이 다른 고객 간 활동 밀도를 공정하게 비교. |
-| | **`Promo_Sensitivity`** | 주문 대비 쿠폰 사용량. 가격 민감도가 높은 '체리피커' 성향 측정. |
-| | **`Stagnant_Loyal`** | 장기 가입자 중 활동성이 급감한 '정체된 우량 고객' 식별 플래그. |
-| | **`Satisfaction_Per_Order`**| 주문 건수 대비 만족도 점수. 개별 구매 경험의 질적 수준을 수치화. |
-| **고객 활동 지표** | **`Tenure_log`** | 가입 기간(Tenure)에 로그 변환을 적용하여 데이터의 왜도(Skewness)를 완화함. |
-| | **`CityTier`** | 고객 거주 도시의 등급 (1~3등급). 지역별 구매력 및 인프라 차이 반영. |
-| | **`NumberOfDeviceRegistered`** | 서비스 이용을 위해 등록된 기기 수. 서비스 의존도 및 보안 관심도 반영. |
-| | **`NumberOfAddress`** | 등록된 배송지 개수. 거주지 이동 빈도나 선물하기 이용 패턴 유추 가능. |
-| | **`OrderAmountHikeFromlastYear`** | 전년 대비 주문 금액 증가율. 고객의 소비 규모 변화 추이 파악. |
-| **행동 플래그** | **`ManyAddressesFlag`** | 배송지가 일정 수 이상인 고객을 분류. (주소지가 잦은 변경 등 특이 패턴) |
-| | **`High_OrderCount`** | 상위권 주문 횟수를 기록한 우량 고객 여부 플래그. |
-| | **`High_CouponUsed`** | 쿠폰 활용도가 매우 높은 프로모션 주도형 고객 여부 플래그. |
-| **로그인 & 결제** | **`PreferredLoginDevice_*`** | 선호하는 로그인 기기 (Mobile Phone, Phone). 접근 경로의 편의성 파악. |
-| (One-Hot Enc.) | **`PreferredPaymentMode_*`** | 선호 결제 수단 (COD, Credit/Debit Card, E-wallet, UPI). 결제 편의성 선호도. |
-| **카테고리 & 인적** | **`PreferedOrderCat_*`** | 선호 쇼핑 카테고리 (Grocery, Laptop, Mobile 등). 고객의 주요 관심사 분류. |
-| (One-Hot Enc.) | **`MaritalStatus_Married`** | 기혼 여부. 가구 구성원에 따른 구매 패턴 차이 반영. |
-| | **`Gender_Male`** | 성별 (남성 여부). 성별에 따른 선호 품목 및 쇼핑 성향 차이 반영. |
+| **기본 정보** | **`CustomerID`** | 고객 고유 식별 번호. (학습 시 제외) |
+| **타겟** | **`Churn`** | **목적 변수.** 이탈 여부 (1: 이탈, 0: 유지) |
+| **고도화 파생** | **`Dormancy_Shock`** | `Recency / Avg_Interval`. 개인별 주기 대비 휴면기의 심각도 측정. |
+| (Feature Eng.) | **`Recency_Tenure_Ratio`** | 가입 기간 대비 휴면 비중. 이탈의 가장 강력한 선행 지표. |
+|  | **`MonthlyOrderFreq`** | 월평균 주문 빈도. 고객 간 활동 밀도를 동일 선상에서 비교. |
+|  | **`Promo_Sensitivity`** | 쿠폰 사용 비중. 혜택 종료 시 이탈 가능성이 높은 체리피커 식별. |
+|  | **`Satisfaction_Per_Order`** | 주문당 만족도. 구매 경험의 질적 수준을 수치화. |
+|  | **`Stagnant_Loyal`** | 장기 고객 중 활동 급감자 식별 (1: 정체 우량고객, 0: 일반). |
+| **수치형 변수** | **`Tenure_log`** | 가입 기간에 로그를 취해 데이터 왜도를 완화한 변수. |
+| (Behavioral) | **`CityTier`** | 거주 도시 등급 (1~3). 지역별 구매력 차이 반영. |
+|  | **`NumberOfDeviceRegistered`** | 등록 기기 수. 서비스 의존도 및 멀티 디바이스 이용 행태. |
+|  | **`NumberOfAddress`** | 등록된 배송지 수. 거주지 이동 또는 선물하기 빈도 유추. |
+|  | **`OrderAmountHikeFromlastYear`** | 전년 대비 주문 금액 증가율. 소비 규모의 확장/축소 추세. |
+| **상태 플래그** | **`ManyAddressesFlag`** | 배송지 수가 임계치를 넘는 특이 고객 (1: 다수 주소지 보유). |
+| (Flags) | **`High_OrderCount`** | 누적 주문량이 상위권인 헤비 유저 여부. |
+|  | **`High_CouponUsed`** | 쿠폰 활용이 매우 높은 프로모션 지향 고객 여부. |
+| **로그인 기기** | **`PreferredLoginDevice_Mobile Phone`** | 스마트폰 앱을 통한 주력 접속 고객 여부. |
+| (One-Hot) | **`PreferredLoginDevice_Phone`** | 웹/일반 폰을 통한 접속 고객 여부. |
+| **결제 수단** | **`PreferredPaymentMode_COD`** | 착불 결제(Cash on Delivery) 선호 고객. |
+| (One-Hot) | **`PreferredPaymentMode_Cash on Delivery`** | (상동) 데이터 기록 방식에 따른 중복 범주. |
+|  | **`PreferredPaymentMode_Credit Card`** | 신용카드 결제 선호 고객. |
+|  | **`PreferredPaymentMode_Debit Card`** | 체크카드 결제 선호 고객. |
+|  | **`PreferredPaymentMode_E wallet`** | 전자지갑(페이류) 결제 선호 고객. |
+|  | **`PreferredPaymentMode_UPI`** | 인도 계좌간 즉시 송금 시스템 이용 고객. |
+| **주문 카테고리** | **`PreferedOrderCat_Grocery`** | 생필품/식료품 주력 구매 고객. (반복 구매 성향) |
+| (One-Hot) | **`PreferedOrderCat_Laptop & Accessory`** | 가전/노트북 주력 구매 고객. (고관여, 교체 주기 김) |
+|  | **`PreferedOrderCat_Mobile`** | 모바일 기기 주력 구매 고객. |
+|  | **`PreferedOrderCat_Mobile Phone`** | (상동) 카테고리 기록 방식 차이 반영. |
+|  | **`PreferedOrderCat_Others`** | 기타 잡화 주력 구매 고객. |
+| **개인 특성** | **`MaritalStatus_Married`** | 기혼 여부. 가구 단위 소비 패턴 반영. |
+|  | **`Gender_Male`** | 성별 (남성 여부). 쇼핑 성향 및 품목 선호도 차이 반영. |

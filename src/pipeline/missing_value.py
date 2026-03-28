@@ -1,7 +1,5 @@
 from src.seed import set_seed
 
-
-
 def MissingValue(group, overall_median, max):
     set_seed()
     if len(group) < max:

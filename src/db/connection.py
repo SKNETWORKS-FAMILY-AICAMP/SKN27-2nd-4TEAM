@@ -1,8 +1,9 @@
 import os
-from sqlalchemy import create_engine, text
-from dotenv import load_dotenv
 
-load_dotenv()
+from sqlalchemy import create_engine, text
+from dotenv import find_dotenv, load_dotenv
+
+load_dotenv(find_dotenv())
 
 def _build_db_url() -> str:
     database_url = os.getenv("DATABASE_URL")

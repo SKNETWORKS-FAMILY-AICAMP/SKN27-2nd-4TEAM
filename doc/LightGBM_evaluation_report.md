@@ -94,8 +94,10 @@
 
 * 범주형 변수(PreferredLoginDevice, PreferedOrderCat, MaritalStatus, Gender)는 원-핫 인코딩을 적용하였음.
 *  불필요한 원본 컬럼은 제거하여 최종 24개 피처로 학습을 진행함
-
-
+<br>
+<br>
+<br>
+<br>
 
 ### 4.모델링 및 학습
 #### 4-1 모델선정
@@ -110,9 +112,72 @@
  * 트리의 균형을 맞추지 않고 최대 손실 값을 갖는 리프 노드를 지속적으로 분할하면서 깊고 비대칭적인 생성
  * 이는 트리 기준 분할 방식에 비해서 예측오류손실을 최소화함
  * XGBoost보다 빠르며 메모리 사용량이 상대적으로 적기에 대용량 데이터 처리가 가능함
+<br>
+<br>
+<br>
 
 #### 4-2 교차 검증(Cross Validation)
 * 기본 하이퍼파라미터를 적용하여 stratified 5-Fold 교차 검증 실시함
 
+|구분|Train Accuracy|Validation Accuracy|Validation AUC|Test AUC
+|------|-----------|----|------------|--------
+|기본 LightGBM (CV 평균)|99.62%|94.16%|96.21|96.46
+
+#### 4-3 베이지안 최적화(optuna)
+* Optuna의 TPE 샘플러를 이용해 5회 탐색으로 최적 하이퍼 파라미터 탐색
+* 목적 함수는 5-Fold Stratified CV의 ROC-AUC 평균임
+
+|하이퍼파라미터|탐색범위|최적값|
+|-----|-----|----|
+|max_depth|2 ~ 5|5
+|min_samples_split|	2 ~ 5|4
+|criterion|	gini / entropy| entropy 
+|max_leaf_nodes |5 ~ 10|9
+|n_estimators |	10 ~ 460 (step=50)|	460
+|learning_rate|	0.01 ~ 0.1|	0.08107934804645796
+
+```text
+optuna 최적 CV AUC:0.96214
+50회 트라이얼 수행 — TPE 샘플러, 재현 가능한 시드(42) 고정
+```
+
+### 5.모델링 최종평가
+
+#### 5-1. 종합 성능 지표
+
+|지표|값|기준|
+|-----|-----|----|
+|model auc score|0.9756|test set
+|model precision score|0.9438|test set
+|model recall score|0.8275|test set
+|model f1 score|0.8818|test set
+
+<br>
+
+#### 5-2.confusion matrix
+![alt text](confusion_matrix_lgbm_jw.png)
+
+#### 5-3.ROC curve
+![alt text](ROC_curve_lgbm_jw.png)
 
 
+#### 5-4.모델분석
+##### 5-4-1 종합 성능 평가
+* 최종 모델은 Test set 기준 AUC 0.9756을 달성하였으며, 이는 이탈/비이탈 고객을 거의 완벽하게 변별하는 수준임.
+* 교차검증 AUC(0.9621)와 Test AUC(0.9756) 간 격차가 0.014에 불과하여 과적합 없이 안정적으로 일반화된 모델임을 확일할수 있음.
+
+##### 5-4-2 Confusion Matrix 해석
+* Precision 0.9438은 모델이 이탈 예측을 하였을 때 오분류 비율이 약 5.6%에 불과함을 의미하며, 마케팅 개입 자원의 낭비를 최소화하는 데 유리함
+* 반면 Recall 0.8275는 실제 이탈 고객 중 약 17%를 탐지하지 못함을 나타냄. * * 이탈 고객 조기 개입이 핵심 비즈니스 목표인 경우, 분류 임계값(기본값 0.5)을 0.3~0.4 수준으로 하향 조정하여 Recall을 높이는 방향을 검토할 필요가 있음.
+
+##### 5-4-3  ROC Curve 해석
+* ROC Curve는 FPR이 0.1 미만인 구간에서도 TPR이 0.85 이상을 유지하는 급격한 상승 패턴을 보이며, 이는 낮은 오탐률 하에서도 높은 탐지율을 확보할 수 있음을 의미함.
+* AUC 0.9756은 이진 분류 실무 기준(AUC > 0.90)을 상회하는 우수한 수준임.
+
+##### 5-4-4 피처 엔지니어링의 기여
+* EDA를 통해 도출한 10개 신규 피처(Dormancy_Shock, Silent_Killer, Recency_Tenure_Ratio 등)와 그룹별 결측치 대체 전략이 모델 성능 안정화에 기여한 것으로 판단됨
+
+### 6.결론
+* 본 LightGBM 모델은 이커머스 고객 이탈 예측 과제에서 AUC 0.9756, F1-Score 0.8818로 실무 배포 기준을 충족하는 성능을 달성함. 
+* 정밀도(0.9438)가 매우 높아 비이탈자에 대한 불필요한 개입을 억제하면서도, Recall의 소폭 한계는 임계값 조정을 통해 비즈니스 목표에 맞게 보완 가능함.
+* 현 모델을 운영 환경에 배포하는 것을 권고되며, 배포 이후 실 이탈 데이터 축적에 따른 주기적 재학습(retraining) 파이프라인 구축을 병행할 것이 제안됨

@@ -120,6 +120,8 @@
 | PR-AUC (Average Precision) | ~0.85 |
 | 혼동행렬 (예시) | 비이탈·이탈 혼동 규모는 노트북 출력 참고 |
 
+
+
 **B. 동일 전처리·동일 그리드로 스크립트 재현 시 (층화 분할, 시드 42)**
 
 | 지표 | 참고 값 |
@@ -170,8 +172,6 @@
 | `src/pipeline/outlier_control.py` | 이상치·로그 변환 |
 | `src/pipeline/features.py` | 파생 피처 |
 | `doc/feature_engineering_validation_report.md` | 피처 생성 검증 보고서 |
-| `scripts/time_holdout_mlp_eval.py` | (선택) `CustomerID` 순서 프록시 홀드아웃 — **시간 기반 평가를 대체하지 않음** |
-
 ---
 
 *본 문서는 코드 구조와 대표 실행 결과를 바탕으로 작성되었으며, 최종 수치는 항상 노트북 재실행 결과를 기준으로 한다. 시간 기반 검증이 필요하면 데이터에 기준 시점 컬럼을 확보한 뒤 별도 설계할 것.*

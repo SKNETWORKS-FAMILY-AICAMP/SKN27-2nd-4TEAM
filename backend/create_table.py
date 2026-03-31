@@ -1,14 +1,6 @@
-import psycopg2
-import streamlit as st
+from connection import get_connection
 
-conn = psycopg2.connect(
-    host=st.secrets['postgres']['host'],
-    port=st.secrets['postgres']['port'],
-    database=st.secrets['postgres']['database'],
-    user=st.secrets['postgres']['user'],
-    password=st.secrets['postgres']['password']
-)
-
+conn = get_connection()
 cursor = conn.cursor()
 
 with open('schema.sql', 'r') as file:

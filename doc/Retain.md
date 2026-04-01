@@ -367,7 +367,7 @@ style: |
       <li><strong>Dormancy Shock</strong>: 평소 대비 주문 공백의 충격 지수</li>
       <li><strong>Recency Tenure Ratio</strong>: 가입기간 대비 최근 공백 비중</li>
       <li><strong>MonthlyOrderFreq</strong>: 월평균 주문 빈도</li>
-      <li><strong>Stagnant Loyal</strong>: 정체된 장기 고객 <br>(가입은 오래됐지만 활동은 평균 이하)</li>
+      <li><strong>Stagnant Loyal</strong>: 정체된 장기 고객 (가입은 오래됐지만 활동은 평균 이하)</li>
     </ul>
   </div>
   <div class="feat-group muted">
@@ -398,10 +398,10 @@ style: |
 
 | 모델명 | 특장점 | 사용 기법 | 하이퍼 파라미터 튜닝 |
 |---|---|---|---|
-| **Random Forest<br>(박준희)** | 비선형 학습, 안정적 | Manual Search CV | `n_estimators=100, max_depth=12,`<br>`class_weight='balanced', random_state=42` |
-| **XGBoost(박창제)** | 최고 정확도, 정규화 | Grid Search CV | `colsample_bytree=0.9, learning_rate=0.1,`<br>`max_depth=5, n_estimators=300, subsample=0.9` |
-| **LightGBM(한재웅)** | 빠른 학습, 메모리 효율 | Bayesian Search CV | `max_depth=5, min_samples_split=4,`<br>`criterion='entropy', max_leaf_nodes=9,`<br>`n_estimators=460, learning_rate=0.0811` |
-| **다층 퍼셉트론<br>(MLP,김민경)** | 배포 용이, 실시간 | Standard Scaler,<br>Grid Search CV | `alpha=0.0001,`<br>`hidden_layer_sizes=(50,50),`<br>`learning_rate_init=0.01` |
+| **Random Forest** | 비선형 학습, 안정적 | Manual Search CV | `n_estimators=100, max_depth=12,`<br>`class_weight='balanced', random_state=42` |
+| **XGBoost** | 최고 정확도, 정규화 | Grid Search CV | `colsample_bytree=0.9, learning_rate=0.1,`<br>`max_depth=5, n_estimators=300, subsample=0.9` |
+| **LightGBM** | 빠른 학습, 메모리 효율 | Bayesian Search CV | `max_depth=5, min_samples_split=4,`<br>`criterion='entropy', max_leaf_nodes=9,`<br>`n_estimators=460, learning_rate=0.0811` |
+| **다층 퍼셉트론(MLP)** | 배포 용이, 실시간 | Standard Scaler,<br>Grid Search CV | `alpha=0.0001,`<br>`hidden_layer_sizes=(50,50),`<br>`learning_rate_init=0.01` |
 
 ---
 

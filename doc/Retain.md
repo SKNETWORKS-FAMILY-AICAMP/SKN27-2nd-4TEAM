@@ -424,7 +424,7 @@ style: |
 
   <div class="model-box">
     <img src="./images/output3.png">
-    <p>XGBoost (Best)</p>
+    <p>XGBoost</p>
   </div>
 </div>
 

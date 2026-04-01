@@ -4,9 +4,14 @@ conn = get_connection()
 cursor = conn.cursor()
 
 with open('schema.sql', 'r') as file:
-    sql = file.read()
+    sql_commands = file.read().split(';')
 
-cursor.execute(sql)
+for command in sql_commands:
+    if command.strip():
+        cursor.execute(command)
+
+
 conn.commit()
+
 cursor.close()
 conn.close()

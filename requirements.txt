@@ -22,4 +22,4 @@ shap==0.51.0
 
 imblearn==0.0
 
-plotly==6.21.0
+plotly==6.6.0

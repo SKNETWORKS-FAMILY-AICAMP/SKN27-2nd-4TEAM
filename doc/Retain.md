@@ -229,8 +229,8 @@ style: |
   }
 
   .auc-bar.rf    { width: 90%;   background: #90caf9; }
-  .auc-bar.lgbm  { width: 97%;   background: #42a5f5; }
-  .auc-bar.mlp   { width: 98%;   background: #1e88e5; }
+  .auc-bar.lgbm  { width: 97.6%;   background: #42a5f5; }
+  .auc-bar.mlp   { width: 96.9%;   background: #1e88e5; }
   .auc-bar.xgb   { width: 99.5%; background: #0d47a1; }
 
   .auc-score {
@@ -439,14 +439,14 @@ style: |
     <div class="auc-score">0.995</div>
   </div>
     <div class="auc-row">
-    <div class="auc-label">🧠 MLP</div>
-    <div class="auc-bar-wrap"><div class="auc-bar mlp"></div></div>
-    <div class="auc-score">0.980</div>
-  </div>
-    <div class="auc-row">
     <div class="auc-label">🚀 LightGBM</div>
     <div class="auc-bar-wrap"><div class="auc-bar lgbm"></div></div>
-    <div class="auc-score">0.970</div>
+    <div class="auc-score">0.976</div>
+  </div>
+    <div class="auc-row">
+    <div class="auc-label">🧠 MLP</div>
+    <div class="auc-bar-wrap"><div class="auc-bar mlp"></div></div>
+    <div class="auc-score">0.969</div>
   </div>
   <div class="auc-row">
     <div class="auc-label">🌲 Random Forest</div>

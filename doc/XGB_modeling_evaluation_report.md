@@ -75,10 +75,10 @@ E-Commerce 플랫폼의 고객 이탈(Churn) 여부를 예측하기 위해 XGBoo
 
 | 지표 | Train | Test | 판정 |
 |------|-------|------|------|
-| AUC (ROC) | ~1.0000 | 0.9952 | ✅ 양호 |
-| CV AUC (5-Fold) | - | 0.9643 | ✅ 양호 |
-| AUC 차이 (Train-Test) | - | ~0.005 | ✅ 과적합 없음 |
-| CV vs Test 차이 | - | 0.0309 | ⚠️ 경계 수준 |
+| AUC (ROC) | ~1.0000 | 0.9952 | 양호 |
+| CV AUC (5-Fold) | - | 0.9643 | 양호 |
+| AUC 차이 (Train-Test) | - | ~0.005 | 과적합 없음 |
+| CV vs Test 차이 | - | 0.0309 | 경계 수준 |
 
 ### 3.2 분류 성능 (Classification Report)
 
@@ -97,10 +97,10 @@ E-Commerce 플랫폼의 고객 이탈(Churn) 여부를 예측하기 위해 XGBoo
 
 | 검증 항목 | 결과 | 판정 |
 |----------|------|------|
-| Train/Test index 겹침 | 0개 | ✅ 누수 없음 |
-| Tenure 중앙값 (train 기준) | 2.1972 (log 변환값) | ✅ 정상 |
-| train_monthly_freq_mean 전달 | 2.3515 (train 기준) | ✅ 정상 |
-| CV AUC vs Test AUC 차이 | 0.0309 (경계 수준) | ⚠️ 모니터링 필요 |
+| Train/Test index 겹침 | 0개 | 누수 없음 |
+| Tenure 중앙값 (train 기준) | 2.1972 (log 변환값) | 정상 |
+| train_monthly_freq_mean 전달 | 2.3515 (train 기준) | 정상 |
+| CV AUC vs Test AUC 차이 | 0.0309 (경계 수준) | 모니터링 필요 |
 
 ---
 
@@ -144,9 +144,11 @@ n_estimators(트리 개수)를 1~800까지 변화시키며 Train Loss와 Test Lo
 
 | 등급 | 기준 | 설명 |
 |------|------|------|
-| VIP | 이탈 확률 < 20% AND 주문 빈도 >= 평균 | 핵심 유지 고객 |
-| At Risk | 이탈 확률 >= 50% OR (>= 30% AND 주문 빈도 < 평균) | 이탈 위험 고객 |
-| Active | 위 두 조건 외 나머지 | 일반 활동 고객 |
+| VIP | 이탈 확률 < 10% AND 주문 빈도 >= 평균 | 핵심 우량 고객 |
+| Platinum | 이탈 확률 < 20% | 안정적 저위험 고객 |
+| Gold | 이탈 확률 20~50% | 관심 필요 고객 |
+| Silver | 이탈 확률 50~80% | 이탈 위험 고객 |
+| Risk | 이탈 확률 >= 80% | 고위험 이탈 고객 |
 
 ---
 
@@ -154,14 +156,14 @@ n_estimators(트리 개수)를 1~800까지 변화시키며 Train Loss와 Test Lo
 
 ### 6.1 파생 피처 설명 (features.py 기반)
 
-| 피처명 | 계산 방식 | 이탈 관련성 |
-|--------|----------|-----------|
-| Dormancy_Shock | DaySinceLastOrder / (평균 주문 주기 + 1) | 값이 클수록 이탈 위험 높음 |
-| Recency_Tenure_Ratio | DaySinceLastOrder / 가입 기간 | 신규 고객 이탈 포착 |
-| MonthlyOrderFreq | OrderCount / 가입 기간(월) | 활동성 측정 (낮을수록 위험) |
-| Silent_Killer | 불만 없음 AND 만족도 <= 2 | 조용한 이탈자 식별 |
-| Stagnant_Loyal | 가입 30개월+ AND 주문 빈도 < 평균 | 정체된 장기 고객 |
-| Satisfaction_Per_Order | SatisfactionScore / (OrderCount + 1) | 주문 효율 대비 만족도 |
+| 피처명 | 계산 방식 | 이탈 관련성 | 
+|--------|----------|-----------| 
+| Dormancy_Shock | DaySinceLastOrder / (평균 주문 주기 + 1) | 값이 클수록 이탈 위험 높음 | 
+| Recency_Tenure_Ratio | DaySinceLastOrder / 가입 기간 | 신규 고객 이탈 포착 | 
+| MonthlyOrderFreq | OrderCount / 가입 기간(월) | 활동성 측정 (낮을수록 위험) | 
+| Silent_Killer | 불만 없음 AND 만족도 <= 2 | 조용한 이탈자 식별 | 
+| Stagnant_Loyal | 가입 30개월+ AND 주문 빈도 < 평균 | 정체된 장기 고객 | 
+| Satisfaction_Per_Order | SatisfactionScore / (OrderCount + 1) | 주문 효율 대비 만족도 | 
 
 ### 6.2 SHAP 분석
 
@@ -191,11 +193,10 @@ XGBoost 기반 고객 이탈 예측 모델은 **Test AUC 0.9952, CV AUC 0.9643**
 
 ### 7.3 개선 방향
 
-- n_estimators를 **200~300으로 조정**하여 불필요한 학습 제거
 - Early Stopping 적용으로 최적 n_estimators 자동 탐색
-- 다양한 random_state로 안정성 검증 (Cross-seed validation)
 - SMOTE 등 오버샘플링 기법 추가 적용으로 클래스 불균형 보완 검토
-- 실제 서비스 데이터 적용 시 **시간 기반 Train/Test 분리(Time-Series Split)** 권장
+
+
 
 ### 7.4 최종 모델 파라미터
 
@@ -209,4 +210,3 @@ XGBoost 기반 고객 이탈 예측 모델은 **Test AUC 0.9952, CV AUC 0.9643**
 
 ---
 
-> 본 보고서는 `model_pcj.ipynb` 기반으로 작성되었습니다.

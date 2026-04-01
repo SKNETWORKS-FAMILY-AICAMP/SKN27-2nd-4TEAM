@@ -226,20 +226,20 @@ with st.container(border=True):
     fig2.update_layout(height=320, margin=dict(l=0, r=0, t=10, b=0), hovermode="x unified", yaxis=dict(range=[85, 110]), showlegend=False, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig2, use_container_width=True)
 
-    st.markdown("<p style='font-weight: 700; font-size: 15px; color: #1E293B; margin-bottom: 10px;'>지표별 이탈 vs 유지 비교 (팀 분석 데이터 반영)</p>", unsafe_allow_html=True)
+    # st.markdown("<p style='font-weight: 700; font-size: 15px; color: #1E293B; margin-bottom: 10px;'>지표별 이탈 vs 유지 비교 (팀 분석 데이터 반영)</p>", unsafe_allow_html=True)
     
-    fig3 = go.Figure()
-    fig3.add_trace(go.Bar(
-        name='이탈 고객', x=df_churn['metric'], y=df_churn['churn'], marker_color='#D97A7A',
-        customdata=[churn_explanations[m] for m in df_churn['metric']],
-        hovertemplate="<b>%{x} (이탈)</b><br>수치: %{y}<br>💡 %{customdata}<extra></extra>"
-    ))
-    fig3.add_trace(go.Bar(
-        name='유지 고객', x=df_churn['metric'], y=df_churn['retain'], marker_color='#4A6FA5',
-        hovertemplate="<b>%{x} (유지)</b><br>수치: %{y}<extra></extra>"
-    ))
-    fig3.update_layout(
-        barmode='group', height=350, margin=dict(l=0, r=0, t=10, b=0),
-        legend=dict(orientation="h", y=-0.2), paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)'
-    )
-    st.plotly_chart(fig3, use_container_width=True)
+    # fig3 = go.Figure()
+    # fig3.add_trace(go.Bar(
+    #     name='이탈 고객', x=df_churn['metric'], y=df_churn['churn'], marker_color='#D97A7A',
+    #     customdata=[churn_explanations[m] for m in df_churn['metric']],
+    #     hovertemplate="<b>%{x} (이탈)</b><br>수치: %{y}<br>💡 %{customdata}<extra></extra>"
+    # ))
+    # fig3.add_trace(go.Bar(
+    #     name='유지 고객', x=df_churn['metric'], y=df_churn['retain'], marker_color='#4A6FA5',
+    #     hovertemplate="<b>%{x} (유지)</b><br>수치: %{y}<extra></extra>"
+    # ))
+    # fig3.update_layout(
+    #     barmode='group', height=350, margin=dict(l=0, r=0, t=10, b=0),
+    #     legend=dict(orientation="h", y=-0.2), paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)'
+    # )
+    # st.plotly_chart(fig3, use_container_width=True)

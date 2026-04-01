@@ -7,6 +7,7 @@ st.set_page_config(
     page_title="Re:tain - AI 이탈 예측 플랫폼",
     page_icon="💠",
     layout="wide",
+    initial_sidebar_state="collapsed" # 기본적으로 닫힘 상태
 )
 
 # 2. React 스타일 완벽 재현을 위한 고도화된 CSS
@@ -19,6 +20,9 @@ st.markdown("""
         background-color: #F7F9FC;
         font-family: 'Inter', sans-serif;
     }
+            
+    [data-testid="stSidebarNav"] { display: none !important; } /* 기본 메뉴 숨김 */
+    [data-testid="collapsedControl"] { display: none !important; } /* 사이드바 여는 화살표 숨김 */
 
     /* Streamlit 기본 UI 요소 제거 */
     #MainMenu {visibility: hidden;}

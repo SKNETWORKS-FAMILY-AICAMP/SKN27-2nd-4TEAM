@@ -59,10 +59,6 @@
   로 **train 스키마에 맞춘다.**  
 - 검증: test에만 나타나는 더미는 0으로 채워지고, train에만 있던 더미는 test에 반영된다.
 
-### 3.3 `CustomerID`
-
-- 모델 입력에서 제거 (`drop`).
-
 ---
 
 ## 4. 학습에서 제외되는 컬럼 (`drop_cols`)
@@ -152,9 +148,7 @@
 
 `CashbackAmount_clip`, `CashbackAmount`, `DaySinceLastOrder_clip`, `DaySinceLastOrder`, `OrderCount`, `Tenure_log`, `Tenure`, `MonthlyOrderFreq`, `CashbackPerOrder`, `Dormancy_Shock`, `Stagnant_Loyal`, `OrderAmountHikeFromlastYear`
 
-**실제로 제거된 컬럼:** 위 중 `FeatureCreate` 직후 프레임에 남아 있는 이름만 적용된다.  
-현재 파이프라인에서는 `OutlierControl`·`FeatureCreate`·`drop_cols` 때문에 **`CashbackAmount_clip`, `DaySinceLastOrder_clip`, `OrderCount` 등은 이미 없거나 다른 단계에서 제거**되어, 아래 **6개만** 드롭된다.
-
+**실제로 제거된 컬럼:** 
 - `Tenure_log`, `MonthlyOrderFreq`, `CashbackPerOrder`, `Dormancy_Shock`, `Stagnant_Loyal`, `OrderAmountHikeFromlastYear`
 
 **재현 조건:** `data/dataset.xlsx`, `train_test_split(test_size=0.2, random_state=42, stratify=y)`, `set_seed(42)`, `MLPClassifier(max_iter=500, random_state=42)`, GridSearch `param_grid`는 `MLP.ipynb`와 동일.
@@ -194,3 +188,6 @@
 ---
 
 *본 문서는 현재 저장소의 `FeatureCreate` 구현 및 `MLP.ipynb` 검증 셀을 기준으로 하며, 코드·실행 결과 변경 시 함께 갱신한다.*
+
+
+![SHAP](../doc/images/MLP_output2.png)

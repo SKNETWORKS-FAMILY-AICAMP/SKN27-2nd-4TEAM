@@ -13,7 +13,35 @@ render_sidebar("행동 분석")
 # 3. 전역 배경색 설정
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+/* 1. 외부 폰트 로드 */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    /* 2. Tailwind 변수 정의 */
+    :root {
+        --font-inter: 'Inter', sans-serif;
+    }
+
+    /* 3. 전체 앱에 폰트 적용 */
+    .stApp, [data-testid="stSidebar"], .stMarkdown {
+        font-family: var(--font-inter) !important;
+    }
+            
+    [data-testid="stSidebar"] {
+        min-width: 260px !important;
+        max-width: 260px !important;
+    }
+
+    /* 4. 기존 스타일 유지 */
+    .react-card-container {
+        font-family: var(--font-inter);
+        background: white;
+    }
+    
+    /* 제목이나 굵은 글씨에도 확실히 적용 */
+    h1, h2, h3, b, strong {
+        font-family: var(--font-inter) !important;
+        font-weight: 700;
+    }   
     .stApp { background-color: #F8FAFC; font-family: 'Inter', sans-serif; }
     [data-testid="stHeader"] { background: rgba(0,0,0,0); }
     
@@ -31,7 +59,8 @@ st.markdown("""
 def get_chart_part(labels, values, colors, height=220):
     fig = go.Figure(data=[go.Pie(
         labels=labels, values=values, hole=.65,
-        marker=dict(colors=colors, line=dict(color='white', width=2)),
+        marker=dict(colors=colors, line=dict(color='white', width=3)),
+        opacity=0.85,
         textinfo='none'
     )])
     fig.update_layout(
@@ -50,7 +79,7 @@ col1, col2 = st.columns(2)
 
 # [상단 카드 1] RFM 세그먼트
 with col1:
-    labels, values, colors = ['VIP', 'Active', 'At Risk', 'Churned'], [20, 35, 25, 20], ['#4A6FA5', '#5FAD56', '#E6A050', '#D97A7A']
+    labels, values, colors = ['VIP', 'Active', 'At Risk', 'Churned'], [20, 35, 25, 20], ['#4A6FA5', '#7FB77E', '#E6C97A', '#D97A7A']
     chart_html = get_chart_part(labels, values, colors)
     
     rfm_html = f"""
@@ -70,8 +99,8 @@ with col1:
 # [상단 카드 2] 위험도 분포
 with col2:
     risk_data = [
-        {"name": "안전", "val": 75.93, "color": "#5FAD56"}, {"name": "양호", "val": 5.68, "color": "#B8A838"},
-        {"name": "주의", "val": 3.91, "color": "#E6A050"}, {"name": "위험", "val": 6.04, "color": "#D97A7A"}, {"name": "고위험", "val": 8.44, "color": "#C0392B"},
+        {"name": "안전", "val": 75.93, "color": "#4A6FA5"}, {"name": "양호", "val": 5.68, "color": "#7FB77E"},
+        {"name": "주의", "val": 3.91, "color": "#E6C97A"}, {"name": "위험", "val": 6.04, "color": "#E09873"}, {"name": "고위험", "val": 8.44, "color": "#B85C5C"},
     ]
     risk_chart = get_chart_part([d['name'] for d in risk_data], [d['val'] for d in risk_data], [d['color'] for d in risk_data])
     
@@ -93,7 +122,7 @@ with col2:
         <div style="font-size: 12px; color: #94A3B8; margin-bottom: 30px;">전체 고객의 이탈 위험 구간 분포</div>
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
             <div style="flex: 0.9; display: flex; flex-direction: column; align-items: center; min-width: 180px;">
-                <div style="width: 100%; margin-left:-230px;">{risk_chart}</div>
+                <div style="flex: 1; display: flex; justify-content: center; align-items: center; overflow: hidden;">{risk_chart}</div>
                 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 5px;">
                     {''.join([f'<div style="font-size:10px; color:#64748B;"><span style="color:{d["color"]};">●</span> {d["name"]}</div>' for d in risk_data])}
                 </div>

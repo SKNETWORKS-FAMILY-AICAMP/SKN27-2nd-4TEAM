@@ -9,7 +9,7 @@ if "customers" not in st.session_state:
     st.session_state.customers = [
         {"id": "C001", "prob": 97, "label": "고위험", "dot": "🔥", "color": "#C0392B", "bg": "#FDEDEC", "segment": "At Risk", "day": "60일", "count": "1회", "amount": "$120", "gender": "남성", "cashback": "$0", "sat": 2},
         {"id": "C002", "prob": 85, "label": "위험",   "dot": "🔴", "color": "#D97A7A", "bg": "#FDEAEA", "segment": "At Risk", "day": "40일", "count": "3회", "amount": "$340", "gender": "여성", "cashback": "$12", "sat": 3},
-        {"id": "C003", "prob": 72, "label": "주의",   "dot": "🟠", "color": "#E6A050", "bg": "#FDF1E3", "segment": "Active",  "day": "20일", "count": "5회", "amount": "$780", "gender": "남성", "cashback": "$45", "sat": 3},
+        {"id": "C003", "prob": 72, "label": "주의",   "dot": "🟠", "color": "#E6C97A", "bg": "#FDF1E3", "segment": "Active",  "day": "20일", "count": "5회", "amount": "$780", "gender": "남성", "cashback": "$45", "sat": 3},
         {"id": "C004", "prob": 45, "label": "양호",   "dot": "🟡", "color": "#B8A838", "bg": "#FEF9E7", "segment": "Active",  "day": "10일", "count": "8회", "amount": "$560", "gender": "여성", "cashback": "$78", "sat": 4},
         {"id": "C005", "prob": 15, "label": "안전",   "dot": "🟢", "color": "#5FAD56", "bg": "#EEF6EE", "segment": "VIP",     "day": "3일",  "count": "15회", "amount": "$2,400", "gender": "남성", "cashback": "$210", "sat": 5},
     ]
@@ -43,10 +43,45 @@ render_sidebar("고객 이탈 관리")
 # --- 5. CSS 스타일링 ---
 st.markdown("""
     <style>
+    /* 1. 외부 폰트 로드 */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    .stApp { background-color: #FFFFF; font-family: 'Inter', sans-serif; }
+
+    /* 2. Tailwind 변수 정의 */
+    :root {
+        --font-inter: 'Inter', sans-serif;
+    }
+
+    /* 3. 전체 앱에 폰트 적용 */
+    .stApp, [data-testid="stSidebar"], .stMarkdown {
+        font-family: var(--font-inter) !important;
+    }
+
+    /* 4. 기존 스타일 유지 */
+    .react-card-container {
+        font-family: var(--font-inter);
+        background: white;
+        /* ... 기존 스타일 ... */
+    }
+    
+    /* 제목이나 굵은 글씨에도 확실히 적용 */
+    h1, h2, h3, b, strong {
+        font-family: var(--font-inter) !important;
+        font-weight: 700;
+    }   
+    [data-testid="stHeader"] { background: rgba(0,0,0,0); }
     .main .block-container { padding-top: 2rem !important; padding-left: 280px !important; padding-right: 40px !important; max-width: 1500px !important; }
     
+            
+    /* 1. 사이드바 접기/펴기 버튼(화살표)을 아예 삭제하여 고정 효과 */
+    [data-testid="collapsedControl"] {
+        display: none !important;
+    }
+    
+    /* 2. 사이드바가 항상 일정 너비를 유지하도록 설정 (선택 사항) */
+    [data-testid="stSidebar"] {
+        min-width: 260px !important;
+        max-width: 260px !important;
+    }
     /* 상단 KPI 디자인 */
     .kpi-card { background: white; padding: 24px; border-radius: 16px; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
     .kpi-val { font-size: 28px; font-weight: 800; color: #1E293B; margin-top: 10px; margin-bottom: 2px; }
@@ -79,6 +114,7 @@ st.write("")
 # [하단 메인 분할]
 m_left, m_right = st.columns([2.6, 1])
 selected_count = sum(st.session_state.check_states.values())
+
 
 with m_left:
     with st.container(border=True):
@@ -129,24 +165,42 @@ with m_left:
 
                 # --- 리스트 바디 ---
                 for c in display_list:
-                    is_chk = st.session_state.check_states[c['id']]
+                    # 1. 개별 체크박스용 고유 키 생성
+                    chk_key = f"chk_{curr_tab_name}_{c['id']}"
                     
-                    # 🚨 [행 색상 하이라이트 지정] 체크 시 배경색 파란색으로 변경
+                    # 🚨 [핵심 수정 부분] if문을 지워서 화면이 렌더링될 때마다 무조건 마스터 상태를 복사해오게 만듭니다!
+                    st.session_state[chk_key] = st.session_state.check_states[c['id']]
+                    
+                    # 3. 현재 체크 상태 확인 (배경색 변경용)
+                    is_chk = st.session_state[chk_key]
                     bg_color = "#F0F7FF" if is_chk else "#FFFFFF"
                     
                     r1, r2, r3 = st.columns([0.05, 0.12, 0.83], vertical_alignment="center")
                     
                     with r1:
-                        st.checkbox("개별", value=is_chk, key=f"chk_{curr_tab_name}_{c['id']}", on_change=update_single_check, args=(c['id'], curr_tab_name), label_visibility="collapsed")
+                        # 🚨 value 인자 제거 (이중 설정 에러 완벽 차단)
+                        st.checkbox(
+                            "개별", 
+                            key=chk_key, 
+                            on_change=update_single_check, 
+                            args=(c['id'], curr_tab_name), 
+                            label_visibility="collapsed"
+                        )
                     
                     with r2:
                         # 🚨 ID 버튼 클릭 시 즉시 상세정보 연동
-                        st.button(c['id'], key=f"btn_{curr_tab_name}_{c['id']}", on_click=set_selected_customer, args=(c['id'],), use_container_width=True)
+                        st.button(
+                            c['id'], 
+                            key=f"btn_{curr_tab_name}_{c['id']}", 
+                            on_click=set_selected_customer, 
+                            args=(c['id'],), 
+                            use_container_width=True
+                        )
                     
                     with r3:
                         # 하이라이트가 적용된 데이터 블록
                         st.markdown(f"""
-                            <div style="background-color:{bg_color}; border-radius:8px; padding:10px 15px; display:flex; align-items:center; transition:0.2s;">
+                            <div style="background-color:{bg_color}; border-radius:8px; padding:10px 15px; display:flex; align-items:center; transition:0.2s; border: 1px solid #F1F5F9;">
                                 <div style="flex:1.5; display:flex; align-items:center;">
                                     <div class="p-bar-bg"><div class="p-bar-fill" style="background:{c['color']}; width:{c['prob']}%;"></div></div>
                                     <b style="color:{c['color']}; font-size:12px;">{c['prob']}%</b>
@@ -159,6 +213,7 @@ with m_left:
                             </div>
                         """, unsafe_allow_html=True)
                     st.write("") # 간격 띄우기
+
 
 with m_right:
     # 👤 [우측 상단] 고객 상세 정보 (연동 완료)

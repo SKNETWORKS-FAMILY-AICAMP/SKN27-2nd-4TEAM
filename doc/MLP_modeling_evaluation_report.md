@@ -2,158 +2,168 @@
 
 **대상 노트북:** `src/modeling/MLP.ipynb`  
 **데이터:** `data/dataset.xlsx` (Target: `Churn`, 이진 분류)  
-**목적:** 전처리·튜닝·검증 절차를 문서화하고, **누수/과적합 리스크**를 점검하며, 운영에 필요한 **Threshold 의사결정** 기준을 제시한다.
+**목적:** 현재 노트북에 구현된 전처리·학습·검증·평가 절차를 문서화하고, 분할·SMOTE·Early stopping·임계값 설정이 결과에 미치는 영향을 명확히 한다.
 
-> **원칙(중요):** 이 문서의 수치는 “말로 적은 예시”가 아니라, **노트북에서 실제 출력된 값**을 기준으로 기록한다.  
-> 노트북을 변경·재실행하면 수치가 바뀔 수 있으므로, “확정 수치”에는 **출처(노트북 출력)** 를 함께 남긴다.
+> **원칙:** 본 문서의 **수치**는 아래에 적은 **노트북 실행 출력(한 번의 실행 기준)** 과 일치한다. 노트북을 수정·재실행하면 수치는 달라질 수 있다.
 
 ---
 
 ## 0. Executive Summary (한 장 요약)
 
-- **모델**: `sklearn.neural_network.MLPClassifier` 기반 Churn 이진 분류
-- **핵심 전처리**: 결측 대체 → 이상치 제어/변환 → 파생 피처 → (필요시) 인코딩/컬럼 정렬 → 스케일링
-- **검증 설계(정석 권장)**: **Train / Validation / Test 3-way**
-  - Validation: 튜닝/threshold 결정용
-  - Test: 최종 1회 평가용(모니터링에 사용 금지)
-- **최근 노트북 출력(확정, `MLP.ipynb`)**
-  - **F1(threshold=0.5)**: **0.6750**
-  - **ROC-AUC**: **0.9381**
-  - **Test Log Loss(최종 1회 평가)**: **0.5002**
+- **모델:** `sklearn.neural_network.MLPClassifier` (이진 분류, `partial_fit` 반복 학습)
+- **전처리:** 결측(CJ/JH) → 이상치(`OutlierControl`) → 파생(`FeatureCreate`) → `StandardScaler`
+- **불균형:** Train을 **내부 train/val로 나눈 뒤**, **내부 train 구간에만** `SMOTE` 적용 (검증·테스트 원본 분포 유지)
+- **조기 종료:** **Validation log loss** 기준, **patience=30** (개선 없으면 중단)
+- **노트북 출력(확정, 해당 실행 기준)**
+  - **Early stopping:** epoch **428** 에서 종료 메시지 출력
+  - **Test F1** (threshold **0.6**): **0.7146**
+  - **Test ROC-AUC:** **0.9325**
 
 ---
 
 ## 1. 데이터·분할 설계
 
-### 1.1 기본 홀드아웃 분할(노트북 기준)
+### 1.1 원본 로드
+
+| 항목 | 내용 |
+|------|------|
+| 파일 | `../../data/dataset.xlsx` (노트북 기준 상대 경로) |
+| 중복 | `CustomerID` 기준 `drop_duplicates` |
+
+### 1.2 학습 전 컬럼 드롭 (라벨 분리 전 `data`에서 제거)
+
+노트북에서 `X = data.drop("Churn")` 이전에 아래 컬럼을 제거한다 (`errors="ignore"`).
+
+- `CustomerID`, `IssueIndex`, `Silent_Killer`, `Recency_Tenure_Ratio`, `Stagnant_Loyal`, `Dormancy_Shock`
+
+### 1.3 홀드아웃 (Train / Test)
 
 | 항목 | 값 |
-|---|---|
+|------|-----|
 | 방법 | `train_test_split` |
 | test 비율 | 20% (`test_size=0.2`) |
 | stratify | `stratify=y` |
 | seed | `random_state=42` |
 
-### 1.2 시간 기반 검증의 한계(필수 주의)
-`dataset.xlsx`에 **관측 시점/스냅샷 날짜/가입일** 등 시간축이 명확한 컬럼이 없으면,  
-**“과거로 학습 → 미래로 평가”** 형태의 시간 홀드아웃을 엄밀히 구성할 수 없다.  
-따라서 본 문서의 홀드아웃 test 지표는 **랜덤/층화 분할에 대한 일반화 성능**을 보여줄 뿐,  
-운영 시점(미래 데이터)에 대한 성능을 보장하지 않는다.
+### 1.4 내부 Train / Validation (스케일링 이후)
 
-**권장**: 데이터에 기준 시점 컬럼(예: 스냅샷 날짜)을 확보한 뒤, 다음을 추가한다.
-- **Time-based holdout**: 과거 구간 학습, 미래 구간 평가
-- **Rolling/Backtesting**: 시점별 성능 안정성 확인
+전체 **Train**을 `StandardScaler`로 변환한 행렬 `X_train_scaled`에 대해 다시 분할한다.
 
----
+| 항목 | 값 |
+|------|-----|
+| 방법 | `train_test_split` |
+| validation 비율 | Train의 20% (`test_size=0.2`) |
+| stratify | `stratify=y_train` |
+| seed | `random_state=42` |
 
-## 2. 전처리 파이프라인(코드 기준) 및 누수 방지 포인트
-
-> 아래 항목은 `src/modeling/MLP.ipynb`에서 사용된 파이프라인/함수명을 기준으로 정리했다.
-
-### 2.1 결측치 처리
-- **모듈**: `src/pipeline/missing_value.py`
-- **전략**
-  - `CJ_MissingValue`: 그룹 중앙값 기반 대체(그룹 최소 크기 조건 포함)
-  - `JH_train_stats`로 **train 통계만 계산** 후
-  - `JH_MissingValue`로 train/test에 **동일 통계 적용**
-- **누수 방지 포인트**
-  - 결측 대체에 쓰는 통계(평균/중앙값/최빈 등)는 **반드시 train에서만 산출**
-
-### 2.2 이상치 처리 및 변환
-- **모듈**: `src/pipeline/outlier_control.py`
-- **전략**: 일부 수치 컬럼에 대해 clip/log 등의 변환 적용
-- **주의**
-  - “train 분포로 임계값을 학습”하는 방식이라면 임계값 산출은 train에만 수행해야 함
-
-### 2.3 파생 피처 생성
-- **모듈**: `src/pipeline/features.py` (`FeatureCreate`)
-- **전략**
-  - train에서 계산한 기준값(예: `MonthlyOrderFreq` 평균)을 test에 전달해 동일 규칙 적용
-- **누수 방지 포인트**
-  - 파생 피처에 쓰는 기준값(평균/비율 분모 등)이 **test를 보지 않고** 만들어지는지 확인
-
-### 2.4 모델 입력 컬럼 정리(필수)
-실험 과정에서 train/test의 컬럼이 달라지는 경우가 있었고(`StandardScaler`에서 feature-name mismatch 발생),
-다음 규칙을 강제해야 한다.
-
-- **식별자/인덱스/의미 없는 컬럼 drop**
-  - 예: `CustomerID`, `IssueIndex` 등
-  - drop는 `errors=\"ignore\"`로 방어(이미 제거된 경우 KeyError 방지)
-- **범주형 처리(MLP에 필수)**
-  - `StandardScaler`는 문자열을 처리할 수 없으므로,
-  - (권장) 원-핫 인코딩 후 스케일링, 또는 ColumnTransformer로 수치/범주 파이프라인 분리
-- **컬럼 정렬**
-  - `X_test = X_test.reindex(columns=X_train.columns, fill_value=0)`로 컬럼/순서 강제
-
-### 2.5 스케일링
-- **도구**: `StandardScaler`
-- **원칙**
-  - `fit`은 **train에만**
-  - validation/test는 **transform만**
+- **SMOTE:** `X_tr_raw`, `y_tr_raw` (내부 train)에만 `fit_resample` → `X_tr`, `y_tr`
+- **Validation:** `X_val_raw`, `y_val` — **SMOTE 미적용** (`X_val = X_val_raw`)
 
 ---
 
-## 3. 모델 및 튜닝(코드 기준)
+## 2. 전처리 파이프라인 (코드 기준)
 
-### 3.1 모델
-- **모델**: `MLPClassifier` (이진 분류)
-- **주의**
-  - 입력 스케일에 민감 → 스케일링 필수
-  - 과적합 가능 → 규제(`alpha`), 구조(hidden sizes), 학습률/epoch, early stopping 등을 점검
+### 2.1 결측치
 
-### 3.2 하이퍼파라미터 탐색
-- **도구**: `GridSearchCV`
-- **설정(요약)**: `cv=3`, `scoring='f1'`
-- **기록된 Best params(노트북 기반)**: `{'alpha': 0.001, 'hidden_layer_sizes': (50, 50), 'learning_rate_init': 0.01}`
+- **모듈:** `src/pipeline/missing_value.py`
+- **CJ:** `CJ_MissingValue` — 지정 컬럼·그룹·최소 그룹 크기에 따라 그룹 중앙값 등으로 대체, 테스트는 train에서 구한 중앙값으로 보조
+- **JH:** `JH_train_stats(X_train)`로 **train 전용 통계** 산출 후 `JH_MissingValue`를 train/test에 동일 적용
 
----
+### 2.2 이상치·변환
 
-## 4. 평가 지표 정의 및 보고 원칙
+- **모듈:** `src/pipeline/outlier_control.py`
+- **대상 컬럼:** `Tenure`, `WarehouseToHome`, `DaySinceLastOrder`, `CashbackAmount`
+- Train/Test 각각에 동일 함수 호출 (clip/log 등은 코드 정의에 따름)
 
-### 4.1 Threshold 비의존(순위 품질)
-- **ROC-AUC**: 확률 점수의 “순위” 품질(임계값 무관)
-- (권장 추가) **PR-AUC(Average Precision)**: 불균형 데이터에서 더 민감한 순위 지표
+### 2.3 파생 피처
 
-### 4.2 Threshold 의존(운영 결정 지표)
-- **Precision**: “이탈”로 예측한 것 중 실제 이탈 비율
-- **Recall**: 실제 이탈 중 잡아낸 비율
-- **F1**: precision/recall 균형 지표
+- **모듈:** `src/pipeline/features.py` — `FeatureCreate`
+- **Test 쪽:** `train_monthly_freq_mean=X_train['MonthlyOrderFreq'].mean()` 전달 (train 평균 고정)
+- **컬럼 정렬:** `X_test.reindex(columns=X_train.columns, fill_value=0)`
 
----
+### 2.4 스케일링
 
-## 5. 실험 결과(노트북 출력 기준)
-
-### 5.1 Test set (확정)
-- **F1(threshold=0.5)**: **0.6750**
-- **ROC-AUC**: **0.9381**
-- **Test Log Loss (final, evaluated once)**: **0.5002**
+- **도구:** `StandardScaler`
+- **fit:** 전체 `X_train` (피처 생성·정렬 완료 후)
+- **transform:** `X_test`
+- 이후 내부 train/val 분할은 **이미 스케일된** `X_train_scaled` 기준
 
 ---
 
-## 6. Threshold 튜닝 절차(권장 표준 프로토콜)
+## 3. 모델·학습·Early stopping
 
-### 6.1 원칙
-- **Validation에서만 threshold를 고른다**
-- **Test는 마지막에 1회만** 성능을 확인한다
+### 3.1 MLP 설정 (노트북 기준)
 
-### 6.2 절차(요약)
-1) validation 확률 `p_val` 계산  
-2) threshold 후보(예: 0.05~0.95) 스윕  
-3) 목표(예: F1 최대, Recall≥목표 등)로 최적 threshold 선택  
-4) 선택된 threshold로 test 1회 평가
+| 하이퍼파라미터 | 값 |
+|----------------|-----|
+| `hidden_layer_sizes` | `(32, 16)` |
+| `activation` | `relu` |
+| `solver` | `adam` |
+| `alpha` | `0.2` |
+| `learning_rate_init` | `0.0001` |
+| `max_iter` | `1` (매 epoch `partial_fit` 1회) |
+| `warm_start` | `True` |
+| `random_state` | `42` |
+
+### 3.2 학습 루프
+
+- 최대 **1000** epoch 동안 `mlp.partial_fit(X_tr, y_tr, classes=np.unique(y_tr))` 반복
+- 매 epoch마다:
+  - **Train loss:** `log_loss(y_tr, mlp.predict_proba(X_tr))` — SMOTE로 증강된 train 분포 기준
+  - **Validation loss:** `log_loss(y_val, mlp.predict_proba(X_val))` — 원본 분포 validation
+
+### 3.3 Early stopping
+
+- `best_val_loss` 갱신 시 patience 카운터 리셋
+- validation loss가 **30 epoch 연속** 개선되지 않으면 중단 (`patience=30`)
+- 기록된 실행에서는 약 **epoch 428** 에서 조기 종료
+
 
 ---
 
-## 7. 신뢰성·누수 점검 체크리스트
+## 4. 평가·임계값
 
-- scaler/encoder를 **전체 데이터에 fit**하지 않았는가
-- 파생 피처가 **미래 정보를 사용**하지 않았는가
-- ID/인덱스가 라벨과 우연히 강한 상관(순서/정렬 누수)인지 점검했는가
+### 4.1 Test 확률
+
+- `y_prob = mlp.predict_proba(X_test_scaled)[:, 1]`
+
+### 4.2 임계값
+
+- 노트북에서는 **`best_t = 0.6`** 으로 고정 후 `y_pred = (y_prob >= best_t).astype(int)`
+- **권장:** 운영 임계값은 validation에서 목표(Recall/F1/비용)에 맞게 스윕해 선택하고, test는 최종 1회만 사용한다. 현재 코드는 임계값을 validation에서 자동 튜닝하지 않는다.
+
+### 4.3 보고 지표 (해당 실행 출력)
+
+| 지표 | 값 |
+|------|-----|
+| F1 (`best_t=0.6`) | **0.7146** |
+| ROC-AUC | **0.9325** |
+
+### 4.4 혼동 행렬
+
+- `confusion_matrix(y_test, y_pred, normalize="true")` 후 히트맵 시각화 (축 라벨: stay / churn)
 
 ---
 
-## 8. 재현 방법(권장)
+## 5. 누수·신뢰성 체크리스트
 
-- `src/modeling/MLP.ipynb`를 위에서 아래로 실행
-- 최종 출력(지표/파라미터/test log loss)을 캡처/저장
+- JH 통계는 **train만**으로 계산되는가
+- 스케일러는 **test에 fit하지 않았는가**
+- SMOTE는 **validation/test에 적용하지 않았는가**
+- `FeatureCreate`의 `MonthlyOrderFreq` 평균은 **train에서만** 계산되어 test에 전달되는가
+- ID·의미 없는 컬럼이 학습 행렬에 남지 않았는가
 
+---
+
+## 6. 재현 방법
+
+1. 프로젝트 루트에서 `src/modeling/MLP.ipynb` 열기  
+2. 셀을 위에서 아래로 실행 (현재 구조는 단일 코드 셀 중심)  
+3. 출력되는 Early stopping epoch, F1, ROC-AUC, 그래프를 보고서 수치와 대조
+
+---
+
+## 7. 문서·코드 동기화
+
+- 피처 정의·컬럼 대응은 `doc/columns.md`, `src/pipeline/features.py`와 함께 관리한다.  
+- 노트북의 **사전 드롭 컬럼 목록**이나 **SMOTE/Early stopping** 정책이 바뀌면 본 보고서의 해당 절을 같이 수정한다.

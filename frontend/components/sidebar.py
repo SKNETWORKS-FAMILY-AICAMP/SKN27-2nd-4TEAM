@@ -43,7 +43,7 @@ def render_sidebar(active_page="고객 이탈 관리"):
             gap: 12px;
             padding: 12px 18px;
             border-radius: 10px;
-            color: white !important;
+            color: #F1F5F9 !important,
             font-size: 0.95rem;
             font-weight: 400;
             text-decoration: none !important;
@@ -53,7 +53,7 @@ def render_sidebar(active_page="고객 이탈 관리"):
         /* 호버 시 효과 */
         .sb-menu-item:hover {{
             background-color: rgba(255, 255, 255, 0.05);
-            color: #F8FAFC;
+            color: #F1F5F9;
         }}
 
         /* 활성화된 메뉴 하이라이트 (Deep Blue) */

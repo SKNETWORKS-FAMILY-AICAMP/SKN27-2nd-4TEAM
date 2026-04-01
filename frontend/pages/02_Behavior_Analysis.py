@@ -83,7 +83,7 @@ with col1:
     chart_html = get_chart_part(labels, values, colors)
     
     rfm_html = f"""
-    <div style="background: white; border-radius: 16px; border: 1px solid #E2E8F0; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Inter', sans-serif; min-height: 380px; margin-left: 10px;">
+    <div style="background: white; border-radius: 16px; border: 1px solid #E2E8F0; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Inter', sans-serif; min-height: 380px; margin-left: 10px;">
         <div style="font-size: 16px; font-weight: 700; color: #1E293B; margin-bottom: 2px;">RFM 세그먼트</div>
         <div style="font-size: 12px; color: #94A3B8; margin-bottom: 30px;">고객 구성 비율</div>
         <div style="display: flex; flex-direction: column; align-items: center;">

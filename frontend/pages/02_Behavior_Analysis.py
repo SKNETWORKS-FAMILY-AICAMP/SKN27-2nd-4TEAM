@@ -79,13 +79,14 @@ col1, col2 = st.columns(2)
 
 # [상단 카드 1] RFM 세그먼트
 with col1:
-    labels, values, colors = ['VIP', 'Active', 'At Risk', 'Churned'], [20, 35, 25, 20], ['#4A6FA5', '#7FB77E', '#E6C97A', '#D97A7A']
+    # 변경 후
+    labels, values, colors = ['VIP', 'Platinum', 'Gold', 'Silver', 'Risk'], [2.66, 73.27, 5.68, 3.91, 14.48], ['#F6C23E', '#4A6FA5', '#E6A050', '#7FB77E', '#D97A7A']
     chart_html = get_chart_part(labels, values, colors)
     
     rfm_html = f"""
     <div style="background: white; border-radius: 16px; border: 1px solid #E2E8F0; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-family: 'Inter', sans-serif; min-height: 380px; margin-left: 10px;">
-        <div style="font-size: 16px; font-weight: 700; color: #1E293B; margin-bottom: 2px;">RFM 세그먼트</div>
-        <div style="font-size: 12px; color: #94A3B8; margin-bottom: 30px;">고객 구성 비율</div>
+        <div style="font-size: 16px; font-weight: 700; color: #1E293B; margin-bottom: 2px;">고객 등급 세그먼트</div>
+        <div style="font-size: 12px; color: #94A3B8; margin-bottom: 30px;">VIP · Platinum · Gold · Silver · Risk 비율</div>
         <div style="display: flex; flex-direction: column; align-items: center;">
             <div style="width: 100%;">{chart_html}</div>
             <div style="display: flex; gap: 16px; margin-top: 20px;">

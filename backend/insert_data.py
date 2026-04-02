@@ -1,6 +1,11 @@
-import pandas as pd
+import os
+from pathlib import Path
 
+import pandas as pd
 from sqlalchemy import create_engine
+
+_ROOT = Path(__file__).resolve().parent.parent
+_DATA = _ROOT / "data"
 
 
 def make_table(df, cols):
@@ -12,8 +17,8 @@ def make_table(df, cols):
     
     return df[valid]
 
-df1 = pd.read_excel('../data/cherrypicker_dataset.xlsx')
-df2 = pd.read_excel('../data/dataset_with_prob.xlsx')
+df1 = pd.read_excel(_DATA / "cherrypicker_dataset.xlsx")
+df2 = pd.read_excel(_DATA / "dataset_with_prob.xlsx")
 
 df = df1.merge(df2, on='CustomerID', how='left')
 
@@ -69,7 +74,11 @@ cherry_metrics = make_table(df, [
 
 
 
-engine = create_engine('postgresql://skn27:password123@localhost:5432/retain_db')
+_db_url = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://skn27:password123@localhost:5432/retain_db",
+)
+engine = create_engine(_db_url)
 
 customer_activity.to_sql("customer_activity", engine, if_exists="replace", index=False)
 

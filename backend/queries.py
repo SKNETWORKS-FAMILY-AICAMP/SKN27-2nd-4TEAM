@@ -1,45 +1,45 @@
-import streamlit as st
 from connection import get_connection
 
 def get_customer_details(customer_id: int):
     conn = get_connection()
     cursor = conn.cursor()
 
+    # pandas to_sql은 컬럼명을 대소문자 유지(따옴표 식별자)로 만들므로 PostgreSQL에서 소문자 참조와 불일치함.
     query = '''
     SELECT 
-        cb.CustomerID AS 고객ID,
+        cb."CustomerID" AS customer_id,
 
-        ca.DaySinceLastOrder AS 접속경과일,
+        ca."DaySinceLastOrder" AS days_since_last_order,
 
-        ca.OrderCount AS 총주문수,  
-        ca.CashbackAmount AS 평균주문금액,
+        ca."OrderCount" AS total_order_count,
+        ca."CashbackAmount" AS cashback_amount,
 
-        ca.CouponUsed AS 쿠폰사용횟수,
-        ca.Complain AS CS문의여부,
-        ca.SatisfactionScore AS 만족도,
+        ca."CouponUsed" AS coupon_used,
+        ca."Complain" AS complain,
+        ca."SatisfactionScore" AS satisfaction_score,
 
-        cm.Churn_Prob AS 이탈확률,
-        chm.Cherry_Prob AS 체리피커확률,
+        cm."Churn_Prob" AS churn_prob,
+        chm."Cherry_Prob" AS cherry_prob,
 
         CASE 
-            WHEN cm.Churn_Prob > 0.8 THEN '최고위험(이탈임박)'
-            WHEN cm.Churn_Prob > 0.5 AND ca.CouponUsed > 3 THEN '위험(체리피커형)'
-            WHEN cm.Churn_Prob > 0.5 THEN '주의(단순이탈위험)'
+            WHEN cm."Churn_Prob" > 0.8 THEN '최고위험(이탈임박)'
+            WHEN cm."Churn_Prob" > 0.5 AND ca."CouponUsed" > 3 THEN '위험(체리피커형)'
+            WHEN cm."Churn_Prob" > 0.5 THEN '주의(단순이탈위험)'
             ELSE '안전'
-        END AS 위험도_세그먼트
+        END AS risk_segment
 
     FROM customer_base cb
 
     LEFT JOIN customer_activity ca 
-        ON cb.CustomerID = ca.CustomerID
+        ON cb."CustomerID" = ca."CustomerID"
 
     LEFT JOIN churn_metrics cm 
-        ON cb.CustomerID = cm.CustomerID
+        ON cb."CustomerID" = cm."CustomerID"
 
     LEFT JOIN cherry_metrics chm 
-        ON cb.CustomerID = chm.CustomerID
+        ON cb."CustomerID" = chm."CustomerID"
 
-    WHERE cb.CustomerID = %s;
+    WHERE cb."CustomerID" = %s;
     '''
 
     try:

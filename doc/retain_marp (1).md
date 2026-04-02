@@ -401,7 +401,7 @@ style: |
 
 <div class="cm-row">
   <div class="cm-box"><img src="./images/output4.png" alt="Random Forest"><p>🌲 Random Forest</p></div>
-  <div class="cm-box"><img src="./images/MLP_output.png" alt="MLP"><p>🧠 MLP</p></div>
+  <div class="cm-box"><img src="./images/MLP_output2.png" alt="MLP"><p>🧠 MLP</p></div>
   <div class="cm-box"><img src="./images/output.png" alt="LightGBM"><p>🚀 LightGBM</p></div>
   <div class="cm-box"><img src="./images/output3.png" alt="XGBoost"><p>⭐ XGBoost</p></div>
 </div>

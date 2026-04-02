@@ -337,53 +337,34 @@ style: |
 </div>
 <div>
 
-<div style="background:white;border:1px solid #d4e8f7;border-radius:14px;padding:16px 14px 12px;">
-<div style="font-size:14px;color:#0d1f3c;font-weight:700;margin-bottom:2px;">AUC 성능 비교</div>
-<div style="font-size:11px;color:#8898aa;margin-bottom:14px;">기준선: 0.88 (차이 강조)</div>
+<div class="hdr"><span class="num">04</span> AUC 성능 비교</div>
 
-<div style="display:flex;flex-direction:column;gap:10px;">
+<div class="auc-list">
 
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#0d1f3c;min-width:32px;">⭐</span>
-    <span style="font-size:12px;color:#555;min-width:64px;">XGBoost</span>
-    <div style="flex:1;background:#e8f0f8;border-radius:4px;height:28px;overflow:hidden;">
-      <div style="width:95.8%;height:100%;background:linear-gradient(to right,#0d1f3c,#1a4a8a);border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
-        <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:white;">0.995</span>
-      </div>
-    </div>
-  </div>
-
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#1a4a8a;min-width:32px;">🚀</span>
-    <span style="font-size:12px;color:#555;min-width:64px;">LightGBM</span>
-    <div style="flex:1;background:#e8f0f8;border-radius:4px;height:28px;overflow:hidden;">
-      <div style="width:80%;height:100%;background:linear-gradient(to right,#1a4a8a,#1e8fc5);border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
-        <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:white;">0.976</span>
-      </div>
-    </div>
-  </div>
-
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#1e8fc5;min-width:32px;">🧠</span>
-    <span style="font-size:12px;color:#555;min-width:64px;">MLP</span>
-    <div style="flex:1;background:#e8f0f8;border-radius:4px;height:28px;overflow:hidden;">
-      <div style="width:74.2%;height:100%;background:linear-gradient(to right,#1e8fc5,#4ab8e0);border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
-        <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:white;">0.969</span>
-      </div>
-    </div>
-  </div>
-
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#4ab8e0;min-width:32px;">🌲</span>
-    <span style="font-size:12px;color:#555;min-width:64px;">R. Forest</span>
-    <div style="flex:1;background:#e8f0f8;border-radius:4px;height:28px;overflow:hidden;">
-      <div style="width:16.7%;height:100%;background:linear-gradient(to right,#4ab8e0,#a0d8f0);border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
-        <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:white;">0.900</span>
-      </div>
-    </div>
-  </div>
-
+<div class="auc-row">
+  <div class="auc-label">🌲 Random Forest</div>
+  <div class="auc-track"><div class="auc-fill rf"><span style="font-size:11px;color:#0D1B4B;font-weight:700;">AUC</span></div></div>
+  <div class="auc-score">0.900</div>
 </div>
+
+<div class="auc-row">
+  <div class="auc-label">🧠 MLP</div>
+  <div class="auc-track"><div class="auc-fill mlp"></div></div>
+  <div class="auc-score">0.969</div>
+</div>
+
+<div class="auc-row">
+  <div class="auc-label">🚀 LightGBM</div>
+  <div class="auc-track"><div class="auc-fill lgbm"></div></div>
+  <div class="auc-score">0.976</div>
+</div>
+
+<div class="auc-row">
+  <div class="auc-label" style="font-weight:700;color:#1A73E8;">⚡ XGBoost ★</div>
+  <div class="auc-track"><div class="auc-fill xgb"></div></div>
+  <div class="auc-score" style="color:#1A73E8;">0.995</div>
+</div>
+
 </div>
 
 </div>
@@ -401,7 +382,7 @@ style: |
 
 <div class="cm-row">
   <div class="cm-box"><img src="./images/output4.png" alt="Random Forest"><p>🌲 Random Forest</p></div>
-  <div class="cm-box"><img src="./images/MLP_output.png" alt="MLP"><p>🧠 MLP</p></div>
+  <div class="cm-box"><img src="./images/MLP_output2.png" alt="MLP"><p>🧠 MLP</p></div>
   <div class="cm-box"><img src="./images/output.png" alt="LightGBM"><p>🚀 LightGBM</p></div>
   <div class="cm-box"><img src="./images/output3.png" alt="XGBoost"><p>⭐ XGBoost</p></div>
 </div>

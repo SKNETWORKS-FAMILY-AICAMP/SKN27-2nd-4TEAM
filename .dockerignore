@@ -1,0 +1,97 @@
+# --- Git / VCS ---
+.git
+.gitattributes
+.gitignore
+
+# --- Python ---
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info
+.eggs
+dist
+build
+develop-eggs
+downloads
+eggs
+parts
+sdist
+var
+wheels
+share/python-wheels
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.tox
+.nox
+.coverage
+.coverage.*
+htmlcov
+.hypothesis
+cover
+.pytype
+.pyre
+
+# --- Virtual environments ---
+.venv
+venv
+env
+ENV
+
+# --- Secrets & local Streamlit ---
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+backend/.streamlit/secrets.toml
+
+# --- IDE / editor ---
+.vscode
+.idea
+*.swp
+*.swo
+.spyderproject
+.spyproject
+.ropeproject
+
+# --- Jupyter ---
+.ipynb_checkpoints
+*.ipynb
+
+# --- OS ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN
+*.lnk
+
+# --- CI / tooling (not needed in image) ---
+.github
+.gitlab-ci.yml
+.pre-commit-config.yaml
+
+# --- Docs & assets (runtime not required; optional keep README via context) ---
+doc
+*.md
+!README.md
+
+# --- Large / generated data (use bind mount at run if needed) ---
+data/*.csv
+data/*.xlsx
+data/*.parquet
+
+# --- Docker (not copied into image by COPY; shrinks send context) ---
+docker-compose*.yml
+docker-compose*.yaml
+compose*.yml
+compose*.yaml
+
+# --- Misc large or scratch dirs ---
+FYR
+agent-transcripts

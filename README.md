@@ -7,14 +7,12 @@
 
 ## 👥 팀원 소개
 
-| 이름 | 역할 |
-|------|------|
-| 김민경 | 팀장 · Feature Engineering · MLP 모델링 · DB 연결 · 최종 점검 |
-| 박준희 | 데이터 전처리 (결측치) · Random Forest 모델링 |
-| 박창제 | 데이터 전처리 (결측치) · XGBoost 모델링 · 이탈 예측 UI 연결 |
-| 한재웅 | 데이터 전처리 (이상치) · LightGBM 모델링 |
-| 임예은 | 한국 소비 트렌드 데이터 수집 · Streamlit 개발 |
+| <img src="https://cdn.discordapp.com/attachments/1485869282872135693/1489109495668936704/image.png?ex=69cf38ca&is=69cde74a&hm=d8639df7bb28212e0b040ede21975cd2aa3cbab0ab64e2cff06e112a135ee827&" width="170"> | <img src="https://i.namu.wiki/i/ZEaPrUIMoMnfKnwSCImoLRrPqABv9V0a--LoFg2kHx-36iNY8Qmfedhl9eWYdrJrzkpX9qwpofPPBxh9VGd-rmYn7iPG_HAqB9wbB9nfQWpE2Uf1pa1NsJtCnbtpWv1-VwiWT42-zn0nAypa8abwYw.webp" width="200"> | <img src="https://i.namu.wiki/i/KusrjcH3key2LNRucTDr2lGy4Bv4q9GgGTjE8IPl_j50pPg5GCtBbz1GqIqu3PANKHmt1jOIaUlpfX8qT17lBBQHxTH7BSA9N5eJJnKGOcEEUz_prtQMp0-rN0XQXCC0Se439_un-siLoZFlrqgZDA.webp" width="200"> | <img src="https://cdn.discordapp.com/attachments/1485869282872135693/1489106146231976057/latest.png?ex=69cf35ab&is=69cde42b&hm=a050ca905dbea3751a61c7e8d33e99c739b8440aef23312064e6a751cfaffe27&" width="200">  |  <img src="https://img.extmovie.com/files/attach/images/135/068/454/012/4c323399f3a48657615568ea7aac5f48.jpg" width="200"> |
+|--------|--------|--------|--------|--------|
+| 김민경 (팀장) | 박준희 | 박창제 | 한재웅 | 임예은 |
+| Feature Engineering · MLP 모델링 · DB 연결 · 최종 점검 | 데이터 전처리 (결측치) · Random Forest 모델링 | 데이터 전처리 (결측치) · XGBoost 모델링 · 이탈 예측 UI 연결 | 데이터 전처리 (이상치) · LightGBM 모델링 | 한국 소비 트렌드 데이터 수집 · Streamlit 개발 |
 
+---
 ## 📅 WBS (작업 일정)
 
 | 단계 | 기간 | 주요 작업 |
@@ -23,8 +21,6 @@
 | 전처리 & 모델링 | 3/27 ~ 3/31 | 결측치/이상치 처리 · Feature Engineering · 4개 모델 학습 및 비교 |
 | 서비스 개발 | 3/30 ~ 4/1 | Streamlit 3페이지 구현 · DB 연결 · UI 통합 |
 | 발표 준비 | 4/2 | PPT 작성 · 최종 시연 준비 |
-
----
 
 ---
 ## 🛠️ 기술 스택
@@ -125,6 +121,8 @@ SKN27-2nd-4TEAM/
 ---
 
 ## 📊 데이터
+
+<img src="https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN27-2nd-4TEAM/blob/dev/doc/ERD.png?raw=true" width=1000>
 
 ### 1. 고객 이탈 데이터 (E-commerce Customer Churn Dataset)
 
@@ -287,9 +285,12 @@ Ran. Forest ██████████████████████�
 | 📈 Consumer Trends | 한국 소비 트렌드 시각화 · 경제적 맥락 기반 이탈 해석 |
 
 ---
-
-
-
+📊 Churn Dashboard
+<img src="https://cdn.discordapp.com/attachments/1486264541925867580/1489167469888278528/screencapture-localhost-8501-Churn-Dashboard-2026-04-02-14_31_54_1_page-0001.jpg?ex=69cf6ec8&is=69ce1d48&hm=1d3769f96bd758aaf6f8249fcdcc7eb87f3d4b0b34f8d47476f3a0ff525a54a6&" width=1000>
+🔍 Behavior Analysis
+<img src="https://cdn.discordapp.com/attachments/1486264541925867580/1489166963501432942/screencapture-localhost-8501-Behavior-Analysis-2026-04-02-14_32_59_page-0001.jpg?ex=69cf6e4f&is=69ce1ccf&hm=5fca3e9f9cf7ed1ad229abddca2513ec9365a582b4873ee41982be724193b46c&" width=1000>
+📈 Consumer Trends 
+<img src="https://cdn.discordapp.com/attachments/1486264541925867580/1489169337934680174/screencapture-localhost-8501-Consumer-Trends-2026-04-02-14_33_44_page-0001.jpg?ex=69cf7085&is=69ce1f05&hm=f7d1a2321a3b7037aed55eefa9051a24fdc822790d709cbe691d8a83f6308d35&" width=1000>
 ---
 
 ## 🚀 실행 방법
@@ -333,7 +334,16 @@ streamlit run frontend/app.py
 3. **Re:tain 플랫폼** — Streamlit 기반 실시간 이탈 예측 대시보드로 현업 활용 가능
 
 ---
+## ⭐ 한줄회고
+- 김민경 : 서로의 작업 흐름을 맞춰가는 과정에서 예상치 못한 상황으로 일정이 지연되며 어려움을 겪었습니다. 이를 정리하고 다시 맞춰가는 과정에서 전체 흐름을 고려해 일정에 여유를 두는 것이 필요하다는 점을 깨달았고, 동시에 팀원들과 진행 상황을 투명하게 공유하며 우선순위를 재조정하는 과정의 중요성도 배울 수 있었습니다
+- 박준희 : 프로젝트를 수행하면서 설계 및 구현의 과정과 더불어 기획의 의도와 목적을 정의하고 결과를 분석하는 것의 중요성을 느낄 수 있었습니다. 특히 데이터 분석의 과정과 어떻게 해야 이 결과를 더 잘 활용할 수 있을지에 대한 고민이 필요하다는 것을 느꼈습니다. 팀원들의 도움으로 하나의 모델을 돌려보면서 공부할 수 있었습니다.
+- 박창제 : 이번 프로젝트를 수행하며 수업 시간에는 이해가 안 됐던 코드들을 이해할 수 있었다. 수업 후 꾸준히 복습을 했더라면 이번 2차 프로젝트를 좀 더 수월하게 진행 할 수 있었다고 생각한다.  머신 러닝에 대해 모든 내용을 공부하긴 어렵다고 느끼고 영어 사전을 보듯 필요한 부분을 빠르게 공부하며 xgboost 모델을 학습시켜 좋은 성과를 낼 수 있었다. 수업 시간에 했던 kaggle 경진 대회가 많은 도움이 되었고 팀원들 간에 협업이 익숙하지 않았지만 이번 프로젝트를 통해서 서로 의지하고 원활한 의사소통을 하여 좋은 결과를 낼 수 있었다고 생각한다.
+- 한재웅 : 2차 프로젝트에서는 이전과는 달리 비교적 유의미한 역할을 맡을수 있었고 머신 러닝 모델링의 과정의 즐거움을 느낄수 있었습니다.
+그러나 더 나은 역할을 하기 위해서는 이번 경험을 바탕으로 개발에 대한 공부를 본격적으로 할수 있도록 하여 다음 프로젝트때는 실질적인 개발을 담당할수 있도록 하고 싶습니다.
+또한 개발 뿐만 아니라 기획에서도 유의미한 기여를 할수 있도록 다양한 도메인 지식을 쌓는데 노력할것입니다.
+- 임예은 : 우리 데이터셋이 고객별 수치라, 시계열 관련한 데이터가 없었다. 그래서 추이를 구할 수 없어서 아쉬웠다. 다음에 데이터셋을 구할 때는 다른 데이터셋을 쓰고 싶다. 그리고 관련 도메인 지식을 더 쌓아서 유용한 서비스를 만들고 싶다.
 
+---
 
 <div align="center">
 
@@ -341,3 +351,5 @@ streamlit run frontend/app.py
 *"데이터로 고객의 마음을 붙잡다"*
 
 </div>
+
+

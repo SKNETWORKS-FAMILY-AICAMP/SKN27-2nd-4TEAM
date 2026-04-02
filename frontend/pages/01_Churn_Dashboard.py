@@ -329,14 +329,14 @@ with m_left:
                 p1, p2, p3 = st.columns([1, 2, 1])
                 with p1:
                     st.button("◀ 이전", key=f"prev_{curr_tab}",
-                              disabled=(tab_offset == 0),
-                              on_click=go_prev_page, args=(curr_tab,), use_container_width=True)
+                        disabled=(tab_offset == 0),
+                        on_click=go_prev_page, args=(curr_tab,), use_container_width=True)
                 with p2:
                     st.markdown(f"<div style='text-align:center;font-size:13px;color:#64748B;padding-top:8px;'>{cur_page} / {total_pages} 페이지 ({tab_total:,}명)</div>", unsafe_allow_html=True)
                 with p3:
                     st.button("다음 ▶", key=f"next_{curr_tab}",
-                              disabled=(tab_offset + PAGE_SIZE >= tab_total),
-                              on_click=go_next_page, args=(curr_tab,), use_container_width=True)
+                    disabled=(tab_offset + PAGE_SIZE >= tab_total),
+                    on_click=go_next_page, args=(curr_tab,), use_container_width=True)
 
 
 with m_right:

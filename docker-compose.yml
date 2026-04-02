@@ -4,13 +4,38 @@ services:
     container_name: churn-db
     restart: always
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-churn_db}
+      POSTGRES_USER: skn27
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: retain_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  app: 
+    build: .
+    container_name: churn-app
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://skn27:password123@db:5432/retain_db
+    ports:
+      - "8501:8501"
+    depends_on:
+      - db
+
+  testapp:
+    build: .
+    container_name: churn-testapp
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://skn27:password123@db:5432/retain_db
+    command: ["streamlit", "run", "backend/testapp.py", "--server.address=0.0.0.0", "--server.port=8502"]
+    ports:
+      - "8502:8502"
+    depends_on:
+      - db
 
 volumes:
   postgres_data:

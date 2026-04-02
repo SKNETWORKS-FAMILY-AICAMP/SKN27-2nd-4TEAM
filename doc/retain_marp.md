@@ -356,6 +356,145 @@ style: |
 
 ---
 
+<div class="hdr"><span class="num">AGENDA</span> 목차</div>
+
+<div class="agenda-grid">
+
+<div class="agenda-card">
+  <div class="agenda-num">01</div>
+  <div class="agenda-text"><h3>프로젝트 개요</h3><p>배경 · 목적 · 팀 구성</p></div>
+</div>
+
+<div class="agenda-card">
+  <div class="agenda-num">02</div>
+  <div class="agenda-text"><h3>데이터 & 전처리</h3><p>결측치 처리 · 이상치 제어 · EDA</p></div>
+</div>
+
+<div class="agenda-card">
+  <div class="agenda-num">03</div>
+  <div class="agenda-text"><h3>피처 엔지니어링</h3><p>10개 파생 변수 설계 · 최종 24개 피처</p></div>
+</div>
+
+<div class="agenda-card">
+  <div class="agenda-num">04</div>
+  <div class="agenda-text"><h3>모델링 & 성능 비교</h3><p>RF · XGBoost · LightGBM · MLP</p></div>
+</div>
+
+<div class="agenda-card">
+  <div class="agenda-num">05</div>
+  <div class="agenda-text"><h3>최종 모델 선정</h3><p>XGBoost · AUC 0.995 · SHAP 분석</p></div>
+</div>
+
+<div class="agenda-card">
+  <div class="agenda-num">06</div>
+  <div class="agenda-text"><h3>서비스 아키텍처</h3><p>Re:tain 플랫폼 · Streamlit · DB</p></div>
+</div>
+
+</div>
+
+---
+
+<div class="hdr"><span class="num">01</span> 프로젝트 개요</div>
+
+<div class="two-col" style="padding-top:22px;">
+
+<div class="card">
+  <div class="card-head">🔍 문제 정의</div>
+  <div class="card-body">
+    <p style="font-size:13px;margin:0 0 12px;">이커머스에서 <strong>고객 이탈(Churn)</strong>은 비즈니스의 직접적 손실로 이어집니다.</p>
+
+| 구분 | 내용 |
+|------|------|
+| 비용 문제 | 신규 고객 유치 비용 ≒ 유지 비용의 **5~7배** |
+| 탐지 어려움 | 체리피커(혜택만 수령 후 이탈) 식별 불가 |
+| 대응 한계 | 이탈 사후 대응은 ROI 낮음 |
+
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head blue">🎯 프로젝트 목적</div>
+  <div class="card-body">
+    <p style="font-size:13px;margin:0 0 12px;"><strong>머신러닝 기반 이탈 예측 모델</strong>로 선제적 고객 관리 체계 구축</p>
+
+| 목표 | 세부 내용 |
+|------|----------|
+| 모델 비교 | RF / XGBoost / LightGBM / MLP 4종 평가 |
+| 피처 설계 | 파생 변수 10개로 이탈 패턴 정밀 포착 |
+| 플랫폼 구현 | Re:tain 대시보드로 실시간 이탈 예측 |
+
+  </div>
+</div>
+
+</div>
+
+---
+
+<div class="hdr"><span class="num">02</span> 데이터 개요</div>
+
+<div class="stat-row">
+  <div class="stat-card"><div class="stat-val">5,630</div><div class="stat-lbl">전체 데이터 건수</div></div>
+  <div class="stat-card"><div class="stat-val">20개</div><div class="stat-lbl">원본 피처 수</div></div>
+  <div class="stat-card"><div class="stat-val">16.9%</div><div class="stat-lbl">이탈 고객 비율 (Churn=1)</div></div>
+  <div class="stat-card"><div class="stat-val">80/20</div><div class="stat-lbl">Train / Test 분할 비율</div></div>
+</div>
+
+<div class="content-pad" style="padding-top:18px;">
+
+| 주요 변수 | 타입 | 설명 |
+|-----------|------|------|
+| `Churn` | int | 타겟 변수 — 이탈(1) / 유지(0) |
+| `Tenure` | float | 가입 기간 (월) |
+| `OrderCount` | float | 주문 횟수 |
+| `SatisfactionScore` | int | 만족도 점수 (1–5) |
+| `CashbackAmount` | float | 캐시백 금액 |
+| `DaySinceLastOrder` | float | 마지막 주문 후 경과일 |
+| `Complain` | int | 불만 제기 여부 (0/1) |
+
+</div>
+
+---
+
+<div class="hdr"><span class="num">02</span> 데이터 전처리</div>
+
+<div class="two-col" style="padding-top:20px;">
+
+<div class="card">
+  <div class="card-head">💊 결측치 처리 — 그룹별 중앙값 대체</div>
+  <div class="card-body">
+
+| 피처 | 결측률 | 처리 방법 |
+|------|--------|-----------|
+| `Tenure` | 4.7% | NumberOfAddress 그룹 중앙값 |
+| `DaySinceLastOrder` | 5.5% | 카테고리×로그인기기 중앙값 |
+| `OrderCount` | 4.7% | 카테고리×결제수단 중앙값 |
+| `OrderAmountHike` | 4.6% | 카테고리 그룹 중앙값 |
+| `HourSpendOnApp` | 4.4% | 전체 중앙값 |
+| `CouponUsed` | 4.6% | 전체 중앙값 |
+
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head blue">📐 이상치 처리 — 분포 기반 차별 적용</div>
+  <div class="card-body">
+
+| 피처 | 처리 방식 | 변환 피처명 |
+|------|-----------|-------------|
+| `Tenure` | 로그 변환 (`log1p`) | `Tenure_log` |
+| `WarehouseToHome` | 로그 변환 (`log1p`) | `WH_log` |
+| `DaySinceLastOrder` | IQR 클리핑 | `Days_clip` |
+| `CashbackAmount` | IQR 클리핑 | `Cashback_clip` |
+
+<div class="banner" style="margin:12px 0 0;">💡 우편향 분포 → 로그 정규화 / 극단값 → IQR 억제</div>
+
+  </div>
+</div>
+
+</div>
+
+---
+
 # 피처 엔지니어링
 
 <div class="subtitle">EDA 기반 이탈 예측력 강화를 목적으로 함</div>

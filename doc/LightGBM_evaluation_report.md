@@ -22,28 +22,28 @@
 
 ### 2.데이터셋 현황
 #### 2-1. 주요 변수 현황
-|변수명|데이터 타입|설명|
-|------|-----------|----|
-|CustomerID|int32|고객 고유 식별자(학습X)|
-|Churn|int32|고객 이탈 여부(타겟)|
-|Tenure|float32|가입기간(월)|
-|PreferredLoginDevice|category|선호로그인 디바이스|
-|CityTier|int32|도시 등급(1-3)|
-|WarehouseToHome|float32|창고-자택 거리(km)|
-|PreferredPaymentMode|category|선호결제수단
-|Gender|category|성별
-|HourSpendOnApp|flaot32|앱 사용 시간
-|NumberOfDeviceRegistered|int32|등록기기수
-|PreferedOrderCat|category|선호주문카테고리
-|SatisfactionScore|int32|만족도 점수
-|MaritalStatus|category|혼인 여부
-|NumberOfAddress|int32|등록 주소 수
-|Complain|int32|불만 여부
-|OrderAmountHikeFromlastYear|flaot32|전년 대비 주문 금액 증가율
-|CouponUsed|flaot32|쿠폰 사용횟수
-|OrderCount|flaot32|주문 횟수
-|DaySinceLastOrder|flaot32|마지막 주문후 경과일
-|CashbackAmount|flaot32|캐시백 금액
+    |변수명|데이터 타입|설명|
+    |------|-----------|----|
+    |CustomerID|int32|고객 고유 식별자(학습X)|
+    |Churn|int32|고객 이탈 여부(타겟)|
+    |Tenure|float32|가입기간(월)|
+    |PreferredLoginDevice|category|선호로그인 디바이스|
+    |CityTier|int32|도시 등급(1-3)|
+    |WarehouseToHome|float32|창고-자택 거리(km)|
+    |PreferredPaymentMode|category|선호결제수단
+    |Gender|category|성별
+    |HourSpendOnApp|flaot32|앱 사용 시간
+    |NumberOfDeviceRegistered|int32|등록기기수
+    |PreferedOrderCat|category|선호주문카테고리
+    |SatisfactionScore|int32|만족도 점수
+    |MaritalStatus|category|혼인 여부
+    |NumberOfAddress|int32|등록 주소 수
+    |Complain|int32|불만 여부
+    |OrderAmountHikeFromlastYear|flaot32|전년 대비 주문 금액 증가율
+    |CouponUsed|flaot32|쿠폰 사용횟수
+    |OrderCount|flaot32|주문 횟수
+    |DaySinceLastOrder|flaot32|마지막 주문후 경과일
+    |CashbackAmount|flaot32|캐시백 금액
 <br>
 <br>
 

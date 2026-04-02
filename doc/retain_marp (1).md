@@ -144,6 +144,8 @@ style: |
   .col2 > div { flex: 1; }
   .feat-header { font-size: 16px; font-weight: 700; color: #0d1f3c; margin-bottom: 10px; }
 
+  
+
   .platform-row { display: flex; gap: 16px; margin-bottom: 20px; }
   .platform-card { flex: 1; background: #f0f7ff; border: 1px solid #d4e8f7; border-radius: 14px; padding: 22px; text-align: center; }
   .platform-card .picon { font-size: 30px; margin-bottom: 10px; display: block; }
@@ -337,51 +339,54 @@ style: |
 </div>
 <div>
 
-<div style="background:white;border:1px solid #d4e8f7;border-radius:14px;padding:16px 14px 12px;">
-<div style="font-size:14px;color:#0d1f3c;font-weight:700;margin-bottom:2px;">AUC 성능 비교</div>
-<div style="font-size:11px;color:#8898aa;margin-bottom:14px;">기준선: 0.88 (차이 강조)</div>
+<div style="background:white; border:1px solid #d4e8f7; border-radius:14px; padding:20px 18px;">
+  <div style="font-size:16px; color:#0d1f3c; font-weight:700; margin-bottom:4px;">📊 AUC 성능 비교</div>
+  <div style="font-size:12px; color:#8898aa; margin-bottom:20px;">모델별 예측 성능 (Area Under Curve)</div>
 
-<div style="display:flex;flex-direction:column;gap:10px;">
+  <div style="display:flex; flex-direction:column; gap:12px;">
 
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#0d1f3c;min-width:32px;">⭐</span>
-    <span style="font-size:12px;color:#555;min-width:64px;">XGBoost</span>
-    <div style="flex:1;background:#e8f0f8;border-radius:4px;height:28px;overflow:hidden;">
-      <div style="width:95.8%;height:100%;background:linear-gradient(to right,#0d1f3c,#1a4a8a);border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
-        <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:white;">0.995</span>
+  <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:14px; min-width:25px;">⭐</span>
+      <span style="font-size:13px; color:#555; min-width:85px; font-weight:600;">XGBoost</span>
+      <div style="flex:1; background:#e8f0f8; border-radius:6px; height:32px; overflow:hidden;">
+        <div style="width:99.5%; height:100%; background:linear-gradient(90deg, #0d1f3c, #1a4a8a); display:flex; align-items:center; justify-content:flex-end; padding-right:10px;">
+          <span style="font-family:'Space Mono',monospace; font-size:12px; font-weight:700; color:white;">0.995</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#1a4a8a;min-width:32px;">🚀</span>
-    <span style="font-size:12px;color:#555;min-width:64px;">LightGBM</span>
-    <div style="flex:1;background:#e8f0f8;border-radius:4px;height:28px;overflow:hidden;">
-      <div style="width:80%;height:100%;background:linear-gradient(to right,#1a4a8a,#1e8fc5);border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
-        <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:white;">0.976</span>
+  <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:14px; min-width:25px;">🚀</span>
+      <span style="font-size:13px; color:#555; min-width:85px; font-weight:600;">LightGBM</span>
+      <div style="flex:1; background:#e8f0f8; border-radius:6px; height:32px; overflow:hidden;">
+        <div style="width:97.6%; height:100%; background:linear-gradient(90deg, #1a4a8a, #1e8fc5); display:flex; align-items:center; justify-content:flex-end; padding-right:10px;">
+          <span style="font-family:'Space Mono',monospace; font-size:12px; font-weight:700; color:white;">0.976</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#1e8fc5;min-width:32px;">🧠</span>
-    <span style="font-size:12px;color:#555;min-width:64px;">MLP</span>
-    <div style="flex:1;background:#e8f0f8;border-radius:4px;height:28px;overflow:hidden;">
-      <div style="width:74.2%;height:100%;background:linear-gradient(to right,#1e8fc5,#4ab8e0);border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
-        <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:white;">0.969</span>
+  <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:14px; min-width:25px;">🧠</span>
+      <span style="font-size:13px; color:#555; min-width:85px; font-weight:600;">MLP</span>
+      <div style="flex:1; background:#e8f0f8; border-radius:6px; height:32px; overflow:hidden;">
+        <div style="width:96.9%; height:100%; background:linear-gradient(90deg, #1e8fc5, #4ab8e0); display:flex; align-items:center; justify-content:flex-end; padding-right:10px;">
+          <span style="font-family:'Space Mono',monospace; font-size:12px; font-weight:700; color:white;">0.969</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:#4ab8e0;min-width:32px;">🌲</span>
-    <span style="font-size:12px;color:#555;min-width:64px;">R. Forest</span>
-    <div style="flex:1;background:#e8f0f8;border-radius:4px;height:28px;overflow:hidden;">
-      <div style="width:16.7%;height:100%;background:linear-gradient(to right,#4ab8e0,#a0d8f0);border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
-        <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:white;">0.900</span>
+  <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-size:14px; min-width:25px;">🌲</span>
+      <span style="font-size:13px; color:#555; min-width:85px; font-weight:600;">R. Forest</span>
+      <div style="flex:1; background:#e8f0f8; border-radius:6px; height:32px; overflow:hidden;">
+        <div style="width:90%; height:100%; background:linear-gradient(90deg, #4ab8e0, #a0d8f0); display:flex; align-items:center; justify-content:flex-end; padding-right:10px;">
+          <span style="font-family:'Space Mono',monospace; font-size:12px; font-weight:700; color:white;">0.900</span>
+        </div>
       </div>
     </div>
+
   </div>
+</div>
 
 </div>
 </div>
@@ -400,10 +405,10 @@ style: |
 <span class="subtitle">4개 모델의 예측 결과를 실제 레이블과 비교</span>
 
 <div class="cm-row">
-  <div class="cm-box"><img src="./images/output4.png" alt="Random Forest"><p>🌲 Random Forest</p></div>
-  <div class="cm-box"><img src="./images/MLP_output2.png" alt="MLP"><p>🧠 MLP</p></div>
-  <div class="cm-box"><img src="./images/output.png" alt="LightGBM"><p>🚀 LightGBM</p></div>
-  <div class="cm-box"><img src="./images/output3.png" alt="XGBoost"><p>⭐ XGBoost</p></div>
+  <div class="cm-box"><img src="./images/output4.png" width="200" height="200" alt="Random Forest"><p>🌲 Random Forest</p></div>
+  <div class="cm-box"><img src="./images/MLP_output2.png" width="200" height="200" alt="MLP"><p>🧠 MLP</p></div>
+  <div class="cm-box"><img src="./images/output.png" width="200" height="200" alt="LightGBM"><p>🚀 LightGBM</p></div>
+  <div class="cm-box"><img src="./images/output3.png" width="200" height="200" alt="XGBoost"><p>⭐ XGBoost</p></div>
 </div>
 
 <div class="info-box">✅ <strong>XGBoost</strong>가 이탈 고객(Churn=1) 탐지에서 가장 높은 재현율(Recall) 달성 — 놓친 이탈자 최소화</div>

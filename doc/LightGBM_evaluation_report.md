@@ -155,10 +155,10 @@ optuna 최적 CV AUC:0.96214
 <br>
 
 #### 5-2.confusion matrix
-![alt text](confusion_matrix_lgbm_jw.png)
+![alt text](images/confusion_matrix_lgbm_jw.png)
 
 #### 5-3.ROC curve
-![alt text](ROC_curve_lgbm_jw.png)
+![alt text](images/ROC_curve_lgbm_jw.png)
 
 
 #### 5-4.모델분석

@@ -82,6 +82,8 @@ E-Commerce 플랫폼의 고객 이탈(Churn) 여부를 예측하기 위해 XGBoo
 
 ### 3.2 분류 성능 (Classification Report)
 
+![alt text](images/xgb_conf_mat.png)
+
 이탈 예측에서 핵심 지표인 Recall(재현율)과 F1 Score를 중점적으로 평가하였습니다.
 
 | 클래스 | Precision | Recall | F1 Score | 설명 |
@@ -106,6 +108,8 @@ E-Commerce 플랫폼의 고객 이탈(Churn) 여부를 예측하기 위해 XGBoo
 
 ## 4. Loss Plot 분석 (과적합 시각화)
 
+![alt text](images/xgb_loss.png)
+
 n_estimators(트리 개수)를 1~800까지 변화시키며 Train Loss와 Test Loss 추이를 분석하였습니다.
 
 ### 4.1 구간별 분석
@@ -121,6 +125,21 @@ n_estimators(트리 개수)를 1~800까지 변화시키며 Train Loss와 Test Lo
 - test_loss가 다시 올라가지 않아 **극단적 과적합은 아님**
 - 300 이후 test_loss가 개선되지 않으므로 **n_estimators는 200~300이 최적**
 - 400~500 이상은 학습 시간만 증가하고 성능 향상은 미미
+
+### 4.3 ROC Curve 분석
+
+![alt text](images/xgb_roc_graph.png)
+
+| 항목 | 내용 |
+|------|------|
+| AUC | 0.9952 |
+| 곡선 형태 | 좌상단에 급격히 수렴 → 매우 우수한 분류 성능 |
+| 의미 | FPR(오탐률)이 낮은 상태에서도 TPR(적중률)이 매우 높음 |
+
+ROC Curve가 좌상단에 바짝 붙어 있을수록 좋은 모델이며,
+점선(대각선)에 가까울수록 랜덤 수준입니다.
+이 모델은 FPR 0.05 이하에서 이미 TPR 0.95 이상을 달성하고 있어
+**이탈 고객을 거의 놓치지 않으면서 유지 고객 오탐도 매우 낮은** 수준입니다.
 
 ---
 
@@ -165,7 +184,29 @@ n_estimators(트리 개수)를 1~800까지 변화시키며 Train Loss와 Test Lo
 | Stagnant_Loyal | 가입 30개월+ AND 주문 빈도 < 평균 | 정체된 장기 고객 | 
 | Satisfaction_Per_Order | SatisfactionScore / (OrderCount + 1) | 주문 효율 대비 만족도 | 
 
+### 6.1.1 Feature Importance 분석
+
+![alt text](images/xgb_feature_importance.png)
+
+XGBoost Feature Importance 기준 상위 피처입니다.
+
+| 순위 | 피처명 | 중요도 점수 | 해석 |
+|------|--------|------------|------|
+| 1 | CashbackPerOrder | 1123 | 주문당 캐시백이 이탈 예측에 가장 큰 영향 |
+| 2 | Dormancy_Shock | 715 | 공백기 충격도, 이탈 핵심 신호 |
+| 3 | OrderAmountHikeFromlastYear | 677 | 작년 대비 주문량 변화 |
+| 4 | Satisfaction_Per_Order | 495 | 주문당 만족도 |
+| 5 | NumberOfAddress | 486 | 배송지 수, 이탈 행동 패턴 반영 |
+| 6 | MonthlyOrderFreq | 465 | 월평균 주문 빈도 |
+| 7 | Recency_Tenure_Ratio | 431 | 가입기간 대비 공백기 비중 |
+| 8 | Tenure_log | 431 | 가입 기간 |
+
+> ※ 파생 피처(CashbackPerOrder, Dormancy_Shock, Satisfaction_Per_Order 등)가
+> 상위권을 차지하여 피처 엔지니어링의 효과가 입증되었습니다.
+
 ### 6.2 SHAP 분석
+
+![alt text](images/xgb_shap.png)
 
 TreeExplainer를 활용한 SHAP 분석으로 개별 고객의 이탈 이유를 설명하였습니다.  
 각 고객별 이탈 기여 피처 Top 2를 추출하여 맞춤형 리텐션 전략 수립에 활용하였습니다.

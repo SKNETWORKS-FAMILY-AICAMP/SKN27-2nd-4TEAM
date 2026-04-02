@@ -75,7 +75,7 @@
 - **Test AUC: 0.9888**
 - ROC 커브가 좌상단에 매우 근접 → 이탈/유지 클래스를 잘 구분하고 있음
 
-![alt text](image.png)
+![alt text](images/image.png)
 
 
 ### 3.5 Precision-Recall Curve & AP Score
@@ -122,7 +122,7 @@
 ### 5.1 Top 15 피처 중요도
 
 > 시각화: `Top 15 Feature Importances (Churn Prediction)` 바 차트 참고
-![alt text](image-1.png)
+![alt text](images/image-1.png)
 
 ### 5.2 상위 피처 해석
 
@@ -148,7 +148,7 @@
 
 ## 6. SHAP를 통한 분석 
 
-![alt text](image-2.png)
+![alt text](images/image-2.png)
 
 - Tenure (가입 기간): 결정적 feature. 가입 기간이 짧을수록(Blue) 이탈 확률(SHAP value > 0)이 급격히 높아지며, 장기 고객일수록(Red) 이탈 가능성이 현저히 낮아지는 '신규 고객 중심 이탈' 패턴
 - Complain (불만 여부): 불만 제기 이력(Red, 1)이 있는 경우 SHAP 값이 양수 방향으로 뚜렷하게 쏠려 있습니다. 이는 불만 발생이 즉각적인 이탈의 주요 요인

@@ -18,14 +18,18 @@ if st.button("고객 정보 조회"):
             st.metric("총 주문 수", f"{data[2]}회" if data[2] is not None else "기록 없음")
             cb = data[3]
             if cb is not None:
-                # CashbackAmount: 금액이면 보통 정수 원 단위; 소수면 그대로 표시(부동소수 이슈는 자릿수로 완화)
                 st.metric("캐시백 금액 (CashbackAmount)", f"{float(cb):,.2f}원")
             else:
                 st.metric("캐시백 금액 (CashbackAmount)", "기록 없음")
 
         with col2:
-            st.write(f"**위험도 세그먼트:** {data[8]}")
-            ch0, ch1 = data[6], data[7]
+            st.write(f"**위험도 세그먼트:** {data[9]}")
+            sat = data[6]
+            st.metric(
+                "만족도 (SatisfactionScore)",
+                f"{float(sat):.4f}" if sat is not None else "—",
+            )
+            ch0, ch1 = data[7], data[8]
             m_a, m_b = st.columns(2)
             with m_a:
                 st.metric(
